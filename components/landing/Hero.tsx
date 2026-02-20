@@ -47,9 +47,11 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="-mt-2 flex w-full justify-center px-2 md:px-4">
-          <div className="w-full max-w-[1022px] overflow-hidden bg-transparent flex justify-center">
-            <DashboardPreview />
+        <div className="-mt-2 flex w-full px-4 md:justify-center">
+          <div className="w-full max-w-[1022px] overflow-x-auto md:overflow-visible bg-transparent pb-4 md:pb-0 hide-scrollbar">
+            <div className="w-[1022px] shrink-0">
+              <DashboardPreview />
+            </div>
           </div>
         </div>
       </div>

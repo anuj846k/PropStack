@@ -13,18 +13,18 @@ const Description = () => {
     const handleScroll = () => {
       const rect = container.getBoundingClientRect();
       const windowHeight = window.innerHeight;
-      
+
       // Calculate when section enters viewport
       const sectionTop = rect.top;
       const sectionHeight = rect.height;
-      
+
       // Start animation when section top reaches 70% of viewport
       // Complete when section bottom reaches top of viewport
       const triggerPoint = windowHeight * 0.7;
       const endPoint = -sectionHeight;
       const scrollRange = triggerPoint - endPoint;
       const currentScroll = triggerPoint - sectionTop;
-      
+
       const progress = Math.max(0, Math.min(1, currentScroll / scrollRange));
       setScrollProgress(progress);
     };
@@ -57,9 +57,9 @@ const Description = () => {
   const words = text.split(' ');
 
   return (
-    <div 
+    <div
       ref={containerRef}
-      className="flex flex-col items-start py-24 px-55.75 font-medium text-5xl leading-16.5 tracking-[-1.2px] bg-background"
+      className="flex flex-col items-start py-16 md:py-24 px-6 md:px-12 lg:px-55.75 font-medium text-3xl md:text-5xl leading-tight md:leading-16.5 tracking-[-1.2px] bg-background"
     >
       <p className="flex flex-wrap">
         {words.map((word, index) => {
@@ -68,7 +68,7 @@ const Description = () => {
           const totalWords = words.length;
           const wordStartProgress = index / totalWords;
           const wordEndProgress = (index + 1) / totalWords;
-          
+
           // Interpolate color based on scroll progress within this word's range
           let opacity = 0.3; // Start gray
           if (scrollProgress >= wordEndProgress) {
@@ -78,7 +78,7 @@ const Description = () => {
             const wordProgress = (scrollProgress - wordStartProgress) / (wordEndProgress - wordStartProgress);
             opacity = 0.3 + (wordProgress * 0.7); // Transition from 0.3 to 1.0
           }
-          
+
           return (
             <span
               key={index}

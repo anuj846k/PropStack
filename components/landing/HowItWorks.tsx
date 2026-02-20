@@ -142,12 +142,12 @@ const HowItWorks = () => {
   return (
     <section
       ref={sectionRef}
-      className="flex w-full flex-col items-start bg-[#F5F5F5] px-55.75 py-0 "
+      className="flex w-full flex-col items-center bg-[#F5F5F5] px-4 md:px-12 lg:px-55.75 py-0"
     >
-      <div className="flex max-w-5xl self-stretch items-start justify-center gap-20 px-6 py-28">
+      <div className="flex w-full max-w-5xl flex-col lg:flex-row items-start justify-center gap-12 lg:gap-20 px-0 lg:px-6 py-16 md:py-28">
         {/* Left Side */}
-        <div className="flex flex-1 flex-col items-start gap-[23.4px]">
-          <h2 className="self-stretch text-5xl font-stretch-expanded text-[#0A0A0A] text-[60px] font-[590] leading-15 tracking-[-1.5px]">
+        <div className="flex w-full lg:flex-1 flex-col items-start gap-[23.4px] shrink-0">
+          <h2 className="self-stretch text-4xl md:text-5xl lg:text-[60px] font-stretch-expanded text-[#0A0A0A] font-[590] leading-tight lg:leading-15 tracking-[-1.5px]">
             How it works
           </h2>
 
@@ -194,21 +194,18 @@ const HowItWorks = () => {
               return (
                 <li
                   key={index}
-                  className={`flex items-start gap-5 self-stretch transition-all duration-700 ease-out ${
-                    index !== steps.length - 1 ? "pb-64" : ""
-                  } ${
-                    isVisible
+                  className={`flex items-start gap-5 self-stretch transition-all duration-700 ease-out ${index !== steps.length - 1 ? "pb-64" : ""
+                    } ${isVisible
                       ? "opacity-100 translate-y-0"
                       : "opacity-0 translate-y-8"
-                  }`}
+                    }`}
                   style={{
                     transitionDelay: isVisible ? `${index * 200}ms` : "0ms",
                   }}
                 >
                   <div
-                    className={`relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-[#3b82f6] text-white transition-all duration-500 ${
-                      isVisible ? "scale-100" : "scale-90"
-                    }`}
+                    className={`relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-[#3b82f6] text-white transition-all duration-500 ${isVisible ? "scale-100" : "scale-90"
+                      }`}
                     style={{
                       transitionDelay: isVisible ? `${index * 200}ms` : "0ms",
                     }}

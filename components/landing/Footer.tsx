@@ -45,7 +45,7 @@ const Footer = () => {
   return (
     <footer className="relative flex w-full flex-col items-start bg-[#F5F5F5] pt-[152px]  ">
       <div className="flex flex-col items-start self-stretch rounded-tl-[48px] rounded-tr-[48px] bg-[#3b82f6] px-6 md:px-16 lg:px-[213px] pb-[64px] pt-[280px] md:pt-[320px] lg:pt-[384px] rounded-b-none">
-        <div className="flex max-w-[1024px] flex-col items-start gap-[88px] self-stretch px-[24px] py-[0px]">
+        <div className="flex max-w-[1024px] flex-col items-start gap-[88px] self-stretch px-[24px] py-0">
           <div className="flex flex-col md:flex-row items-start justify-between gap-8 md:gap-16 self-stretch">
             {/* Logo */}
             <a
@@ -63,15 +63,14 @@ const Footer = () => {
 
             {/* Navigation */}
             <nav
-              className="flex items-start gap-[64px]"
+              className="flex items-start flex-wrap md:flex-nowrap gap-8 md:gap-[64px] w-full md:w-auto"
               aria-label="Footer Navigation"
             >
               {FOOTER_LINK_GROUPS.map((group) => (
                 <div
                   key={group.title}
-                  className={`flex flex-col items-start gap-[16px] self-stretch ${
-                    group.minWidth ?? ''
-                  }`}
+                  className={`flex flex-col items-start gap-[16px] self-stretch ${group.minWidth ?? ''
+                    }`}
                 >
                   <h2 className={headingClass}>{group.title}</h2>
 

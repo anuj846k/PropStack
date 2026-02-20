@@ -83,34 +83,32 @@ const TrustedBy = () => {
   }, []);
 
   return (
-    <section className="flex w-[1470px] px-[223px] py-[128px] flex-col items-start border-t border-b border-[rgba(168,217,70,0.15)] bg-white">
-      <div className="h-[424.5px] max-w-[1024px] self-stretch">
-        <div className="flex flex-col items-start w-5xl">
-          <h1 className="text-[60px] leading-[75px] font-medium text-[#171717]">
+    <section className="flex w-full max-w-[1470px] mx-auto px-4 md:px-[100px] lg:px-[223px] py-16 md:py-[128px] flex-col items-center lg:items-start border-t border-b border-[rgba(168,217,70,0.15)] bg-white overflow-hidden">
+      <div className="h-auto md:h-[424.5px] w-full max-w-[1024px] self-stretch flex flex-col items-center lg:items-start">
+        <div className="flex flex-col items-center lg:items-start w-full max-w-5xl">
+          <h1 className="text-4xl md:text-[60px] leading-tight md:leading-[75px] font-medium text-[#171717] text-center lg:text-left">
             Trusted by teams worldwide
           </h1>
 
           {/* Team Members */}
-          <div className="flex w-[1024px] justify-center items-start gap-12">
-            <div className="flex h-[149.5px] pr-[100px] pl-1 items-center gap-6 flex-1">
+          <div className="flex w-full max-w-[1024px] justify-center lg:justify-start items-start gap-4 md:gap-12 mt-8 md:mt-12">
+            <div className="flex h-auto md:h-[149.5px] pr-0 md:pr-[100px] pl-1 items-center gap-4 md:gap-6 flex-wrap md:flex-nowrap justify-center lg:justify-start w-full">
               {teamMembers.map(({ name, img }, index) => (
                 <div
                   key={name}
                   className="flex h-[149.5px] py-[38.75px] flex-col justify-center items-start"
                 >
                   <div
-                    className={`transition-all duration-500 ${
-                      index === activeIndex
-                        ? "opacity-100 scale-110"
-                        : "opacity-60 scale-100"
-                    }`}
+                    className={`transition-all duration-500 ${index === activeIndex
+                      ? "opacity-100 scale-110"
+                      : "opacity-60 scale-100"
+                      }`}
                   >
                     <div
-                      className={`flex w-[72px] h-[72px] justify-center items-center rounded-full transition-all duration-500 ${
-                        index === activeIndex
-                          ? "bg-[#3b82f6] ring-4 ring-[#3b82f6]/20"
-                          : "bg-transparent"
-                      }`}
+                      className={`flex w-[72px] h-[72px] justify-center items-center rounded-full transition-all duration-500 ${index === activeIndex
+                        ? "bg-[#3b82f6] ring-4 ring-[#3b82f6]/20"
+                        : "bg-transparent"
+                        }`}
                     >
                       <Image
                         src={img}
@@ -127,16 +125,15 @@ const TrustedBy = () => {
           </div>
 
           {/* Review Text */}
-          <div className="mt-12 min-h-[120px] w-full overflow-hidden">
+          <div className="mt-8 md:mt-12 min-h-[180px] md:min-h-[120px] w-full overflow-hidden">
             <div className="relative">
               {teamMembers.map(({ name, review, company }, index) => (
                 <div
                   key={name}
-                  className={`absolute inset-0 transition-opacity duration-1000 ease-in-out will-change-opacity ${
-                    index === activeIndex
-                      ? "opacity-100 z-10"
-                      : "opacity-0 z-0 pointer-events-none"
-                  }`}
+                  className={`absolute inset-0 transition-opacity duration-1000 ease-in-out will-change-opacity ${index === activeIndex
+                    ? "opacity-100 z-10"
+                    : "opacity-0 z-0 pointer-events-none"
+                    }`}
                   style={{
                     transition: "opacity 1000ms cubic-bezier(0.4, 0, 0.2, 1)",
                   }}
@@ -151,12 +148,12 @@ const TrustedBy = () => {
                       >
                         <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.996 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.984zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
                       </svg>
-                      <p className="text-xl leading-[32px] font-normal text-[rgba(10,10,10,0.70)] pl-6">
+                      <p className="text-lg md:text-xl leading-[28px] md:leading-[32px] font-normal text-[rgba(10,10,10,0.70)] pl-6 text-center lg:text-left">
                         {review}
                       </p>
                     </div>
-                    <div className="flex items-center gap-3 pl-6">
-                      <div className="h-px w-8 bg-[#3b82f6]" />
+                    <div className="flex items-center gap-3 pl-0 lg:pl-6 justify-center lg:justify-start">
+                      <div className="h-px w-6 md:w-8 bg-[#3b82f6]" />
                       <div className="flex flex-col">
                         <span className="text-base font-medium leading-6 text-[#171717]">
                           {name}
@@ -173,7 +170,7 @@ const TrustedBy = () => {
           </div>
 
           {/* Logos */}
-          <div className="h-10 w-5xl flex justify-between mt-12">
+          <div className="h-auto md:h-10 w-full max-w-5xl flex flex-col md:flex-row justify-between items-center gap-8 md:gap-0 mt-8 md:mt-12">
             {logos.map(
               (
                 { name, component, wrapperClass, innerClass, extraInnerClass },
@@ -183,11 +180,10 @@ const TrustedBy = () => {
                 return (
                   <div
                     key={name}
-                    className={`transition-all duration-500 ${
-                      isActive
-                        ? wrapperClass.replace("opacity-30", "opacity-100")
-                        : wrapperClass
-                    }`}
+                    className={`transition-all duration-500 ${isActive
+                      ? wrapperClass.replace("opacity-30", "opacity-100")
+                      : wrapperClass
+                      }`}
                   >
                     <div className={innerClass}>
                       {extraInnerClass ? (
