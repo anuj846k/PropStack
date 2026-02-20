@@ -156,7 +156,7 @@ const Bento = () => {
               {RINGS.map((ringClass) => (
                 <div
                   key={ringClass}
-                  className={`pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border ${ringClass}`}
+                  className={`pointer-events-none  absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border ${ringClass}`}
                 />
               ))}
 

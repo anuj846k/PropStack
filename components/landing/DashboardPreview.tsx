@@ -31,7 +31,7 @@ export default function DashboardPreview() {
           <div className="w-6 h-6 rounded-md bg-blue-600 flex items-center justify-center text-white shadow-sm">
             <Building2 className="w-3.5 h-3.5" />
           </div>
-          <span className="font-semibold text-gray-900">PropPilot</span>
+          <span className="font-semibold text-gray-900">PropStack</span>
         </div>
 
         <nav className="flex flex-col gap-1">
