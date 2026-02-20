@@ -7,28 +7,28 @@ import { useEffect, useState } from "react";
 const teamMembers = [
   {
     name: "Jennifer Walsh",
-    img: "/Assests/JenniferWalsh.png",
+    img: "/Assets/JenniferWalsh.png",
     company: "CommandR",
     review:
       "Centora has transformed how we manage our property portfolio. The AI automation saves us hours every week.",
   },
   {
     name: "Micheal Torres",
-    img: "/Assests/MichealTorres.png",
+    img: "/Assets/MichealTorres.png",
     company: "Interlock",
     review:
       "The rent collection automation is incredible. We've seen a 99% collection rate since switching to Centora.",
   },
   {
     name: "Amanda Chen",
-    img: "/Assests/AmandaChen.png",
+    img: "/Assets/AmandaChen.png",
     company: "FocalPoint",
     review:
       "Real-time insights help us make data-driven decisions. Our vacancy costs have dropped significantly.",
   },
   {
     name: "David Patterson",
-    img: "/Assests/DavidPatterson.png",
+    img: "/Assets/DavidPatterson.png",
     company: "AcmeCorp",
     review:
       "Scaling our portfolio became effortless with Centora. The platform grows with us seamlessly.",

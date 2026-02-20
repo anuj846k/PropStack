@@ -1,7 +1,7 @@
-import { Rocket, Zap } from 'lucide-react';
-import Image from 'next/image';
-import type { ComponentType } from 'react';
-import { Check, Star } from '../icons';
+import { Rocket, Zap } from "lucide-react";
+import Image from "next/image";
+import type { ComponentType } from "react";
+import { Check, Star } from "../icons";
 
 type Avatar = { src: string; alt: string };
 type KpiRow = {
@@ -11,37 +11,37 @@ type KpiRow = {
 };
 
 const AVATARS = [
-  { src: '/Assets/img1.png', alt: 'User avatar 1' },
-  { src: '/Assets/img2.png', alt: 'User avatar 2' },
-  { src: '/Assets/img3.png', alt: 'User avatar 3' },
-  { src: '/Assets/img4.png', alt: 'User avatar 4' },
+  { src: "/Assets/img1.png", alt: "User avatar 1" },
+  { src: "/Assets/img2.png", alt: "User avatar 2" },
+  { src: "/Assets/img3.png", alt: "User avatar 3" },
+  { src: "/Assets/img4.png", alt: "User avatar 4" },
 ] satisfies Avatar[];
 
 const KPI_ROWS = [
-  { Icon: Rocket, label: '2,598 Tickets Resolved', delta: '+24%' },
-  { Icon: Zap, label: '99.9% Rent Collected', delta: '+0.2%' },
+  { Icon: Rocket, label: "2,598 Tickets Resolved", delta: "+24%" },
+  { Icon: Zap, label: "99.9% Rent Collected", delta: "+0.2%" },
 ] satisfies KpiRow[];
 
-const PROJECT_META = ['PRJ', '2024', 'LIVE'] as const;
+const PROJECT_META = ["PRJ", "2024", "LIVE"] as const;
 
 const REALTIME_TABS = [
-  { label: 'Rent', active: true },
-  { label: 'Tickets', active: false },
-  { label: 'Leases', active: false },
+  { label: "Rent", active: true },
+  { label: "Tickets", active: false },
+  { label: "Leases", active: false },
 ] as const;
 
 const RINGS = [
-  'h-[352px] w-[352px] border-[rgba(59,130,246,0.40)]',
-  'h-[288px] w-[288px] border-[rgba(59,130,246,0.60)]',
-  'h-[224px] w-[224px] border-[rgba(59,130,246,0.80)]',
+  "h-[352px] w-[352px] border-[rgba(59,130,246,0.40)]",
+  "h-[288px] w-[288px] border-[rgba(59,130,246,0.60)]",
+  "h-[224px] w-[224px] border-[rgba(59,130,246,0.80)]",
 ] as const;
 
-const ROUND_CARD = 'rounded-[32px]';
+const ROUND_CARD = "rounded-[32px]";
 const PHONE_NOTCH =
-  'absolute left-1/2 top-2 -translate-x-1/2 rounded-[16777200px] bg-[#262626]';
+  "absolute left-1/2 top-2 -translate-x-1/2 rounded-[16777200px] bg-[#262626]";
 const KPI_TILE =
-  'flex items-center justify-between rounded-xl bg-[#F5F5F5] p-3';
-const META_TEXT = 'text-[12px] leading-4 tracking-[1.2px] text-[#404040]';
+  "flex items-center justify-between rounded-xl bg-[#F5F5F5] p-3";
+const META_TEXT = "text-[12px] leading-4 tracking-[1.2px] text-[#404040]";
 
 const Bento = () => {
   return (
@@ -177,8 +177,8 @@ const Bento = () => {
                       key={tab.label}
                       className={
                         tab.active
-                          ? 'rounded-[16777200px] bg-[#3b82f6] px-[10px] py-1 text-[12px] leading-4 text-white'
-                          : 'px-2 py-1 text-[12px] leading-4 text-[#A1A1A1]'
+                          ? "rounded-[16777200px] bg-[#3b82f6] px-[10px] py-1 text-[12px] leading-4 text-white"
+                          : "px-2 py-1 text-[12px] leading-4 text-[#A1A1A1]"
                       }
                     >
                       {tab.label}
@@ -220,7 +220,7 @@ const Bento = () => {
                   <div
                     key={avatar.src}
                     className={`relative h-12 w-12 overflow-hidden rounded-full border-2 border-white/25 ${
-                      index === 0 ? '' : '-ml-3'
+                      index === 0 ? "" : "-ml-3"
                     }`}
                   >
                     <Image
