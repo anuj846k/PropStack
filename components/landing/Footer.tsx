@@ -51,13 +51,13 @@ const Footer = () => {
             <a
               href="#"
               className="flex items-center gap-[8px]"
-              aria-label="RentIq Home"
+              aria-label="PropPilot Home"
             >
               <div className="h-[32px] w-[32px] rounded-lg bg-white flex items-center justify-center text-blue-600 shadow-sm">
                 <Building2 className="w-5 h-5" />
               </div>
               <span className="flex flex-col items-start text-white font-bold text-xl tracking-tight">
-                RentIq
+                PropPilot
               </span>
             </a>
 
@@ -91,7 +91,7 @@ const Footer = () => {
 
           {/* Copyright */}
           <p className="flex flex-col items-center self-stretch text-center text-white/50 text-[13.6px]  leading-5">
-            © 2026 RentIq. All rights reserved.
+            © 2026 PropPilot. All rights reserved.
           </p>
         </div>
       </div>

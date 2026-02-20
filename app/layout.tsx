@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'RentIq',
+  title: 'Proppilot',
   description: 'Build Faster, Ship with Confidence',
 };
 
