@@ -13,18 +13,14 @@ const Description = () => {
     const handleScroll = () => {
       const rect = container.getBoundingClientRect();
       const windowHeight = window.innerHeight;
-      
-      // Calculate when section enters viewport
       const sectionTop = rect.top;
-      const sectionHeight = rect.height;
-      
-      // Start animation when section top reaches 70% of viewport
-      // Complete when section bottom reaches top of viewport
-      const triggerPoint = windowHeight * 0.7;
-      const endPoint = -sectionHeight;
-      const scrollRange = triggerPoint - endPoint;
-      const currentScroll = triggerPoint - sectionTop;
-      
+
+      // Start reveal when section is in view; not too early so faded state is visible first
+      const startPoint = windowHeight * 0.75;  // section in lower half of viewport
+      const endPoint = windowHeight * 0.2;     // complete when section is in upper viewport
+      const scrollRange = startPoint - endPoint;
+      const currentScroll = startPoint - sectionTop;
+
       const progress = Math.max(0, Math.min(1, currentScroll / scrollRange));
       setScrollProgress(progress);
     };
@@ -57,34 +53,35 @@ const Description = () => {
   const words = text.split(' ');
 
   return (
-    <div 
+    <div
       ref={containerRef}
-      className="flex flex-col items-start py-24 px-55.75 font-medium text-5xl leading-16.5 tracking-[-1.2px] bg-background"
+      className="flex flex-col items-start py-24 px-55.75 font-semibold text-5xl leading-16.5 bg-background text-[#0A0A0A]"
     >
       <p className="flex flex-wrap">
         {words.map((word, index) => {
-          // Calculate which words should be colored based on scroll progress
-          // Each word gets a portion of the scroll progress
           const totalWords = words.length;
           const wordStartProgress = index / totalWords;
           const wordEndProgress = (index + 1) / totalWords;
-          
-          // Interpolate color based on scroll progress within this word's range
-          let opacity = 0.3; // Start gray
-          if (scrollProgress >= wordEndProgress) {
-            opacity = 1; // Fully black
-          } else if (scrollProgress > wordStartProgress) {
-            // Gradually transition from gray to black
-            const wordProgress = (scrollProgress - wordStartProgress) / (wordEndProgress - wordStartProgress);
-            opacity = 0.3 + (wordProgress * 0.7); // Transition from 0.3 to 1.0
-          }
-          
+
+          // Revealed = full black, no blur; unrevealed = faint shade + blur
+          const isRevealed = scrollProgress >= wordEndProgress;
+          const inTransition =
+            scrollProgress > wordStartProgress && scrollProgress < wordEndProgress;
+          const wordProgress = inTransition
+            ? (scrollProgress - wordStartProgress) /
+              (wordEndProgress - wordStartProgress)
+            : 0;
+
+          const opacity = isRevealed ? 1 : inTransition ? 0.14 + wordProgress * 0.86 : 0.14;
+          const blurPx = isRevealed ? 0 : inTransition ? (1 - wordProgress) * 5 : 5;
+
           return (
             <span
               key={index}
-              className="transition-opacity duration-200 ease-out"
+              className="inline-block transition-all duration-300 ease-out"
               style={{
                 color: `rgba(10, 10, 10, ${opacity})`,
+                filter: blurPx > 0 ? `blur(${blurPx}px)` : 'none',
               }}
             >
               {word}

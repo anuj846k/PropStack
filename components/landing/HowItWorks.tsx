@@ -28,204 +28,150 @@ const HowItWorks = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const stepsListRef = useRef<HTMLUListElement>(null);
   const lineContainerRef = useRef<HTMLDivElement>(null);
+
+  const [lineTop, setLineTop] = useState(0);
   const [lineHeight, setLineHeight] = useState(0);
-  const [activeStepIndex, setActiveStepIndex] = useState(-1);
+  const [progressHeight, setProgressHeight] = useState(0);
+  const lineHeightRef = useRef(0);
+
+  const measureLine = () => {
+    const stepsList = stepsListRef.current;
+    const container = lineContainerRef.current;
+    if (!stepsList || !container) return;
+
+    const items = stepsList.querySelectorAll("li");
+    if (items.length < 2) return;
+
+    const firstIcon = items[0].querySelector<HTMLDivElement>('div[class*="rounded-full"]');
+    const lastIcon = items[items.length - 1].querySelector<HTMLDivElement>(
+      'div[class*="rounded-full"]'
+    );
+    if (!firstIcon || !lastIcon) return;
+
+    const containerRect = container.getBoundingClientRect();
+    const firstRect = firstIcon.getBoundingClientRect();
+    const lastRect = lastIcon.getBoundingClientRect();
+
+    const firstCenterY = firstRect.top - containerRect.top + firstRect.height / 2;
+    const lastCenterY = lastRect.top - containerRect.top + lastRect.height / 2;
+    const height = Math.max(0, lastCenterY - firstCenterY);
+
+    lineHeightRef.current = height;
+    setLineTop(firstCenterY);
+    setLineHeight(height);
+  };
+
+  const updateProgress = () => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const rect = section.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+    const start = windowHeight * 0.8;
+    const end = -rect.height * 0.3;
+    const total = start - end;
+    const current = start - rect.top;
+    const progress = Math.max(0, Math.min(1, current / total));
+
+    setProgressHeight(progress * lineHeightRef.current);
+  };
 
   useEffect(() => {
-    const section = sectionRef.current;
-    const stepsList = stepsListRef.current;
-    const lineContainer = lineContainerRef.current;
-    if (!section || !stepsList || !lineContainer) return;
+    const run = () => {
+      measureLine();
+      updateProgress();
+    };
 
-    const calculateLineHeight = () => {
-      // Get the last step element
-      const stepElements = stepsList.querySelectorAll("li");
-      if (stepElements.length === 0) return 753.98; // Fallback to original height
+    const t = setTimeout(run, 50);
 
-      const lastStep = stepElements[stepElements.length - 1];
-      const lastStepIcon = lastStep.querySelector('div[class*="rounded-full"]');
-
-      if (!lastStepIcon) return 753.98; // Fallback to original height
-
-      // Calculate distance from line container top to center of last icon
-      const lineContainerRect = lineContainer.getBoundingClientRect();
-      const lastStepIconRect = lastStepIcon.getBoundingClientRect();
-
-      // Distance from line container top to center of last icon
-      const iconCenterY =
-        lastStepIconRect.top -
-        lineContainerRect.top +
-        lastStepIconRect.height / 2;
-
-      // Total line height should reach the center of the last icon
-      // Add a small buffer to ensure it connects properly
-      return Math.max(iconCenterY, 0);
+    const handleResize = () => {
+      measureLine();
+      updateProgress();
     };
 
     const handleScroll = () => {
-      const rect = section.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      const sectionTop = rect.top;
-      const sectionHeight = rect.height;
-
-      // Calculate scroll progress (0 to 1) based on section visibility
-      // Start animating when section top reaches 70% of viewport
-      // Complete when section bottom reaches top of viewport
-      const triggerPoint = windowHeight * 0.7;
-      const endPoint = -sectionHeight;
-      const scrollRange = triggerPoint - endPoint;
-      const currentScroll = triggerPoint - sectionTop;
-
-      const scrollProgress = Math.max(
-        0,
-        Math.min(1, currentScroll / scrollRange),
-      );
-
-      // Determine which step should be active based on scroll progress
-      // Divide scroll progress into segments for each step (each step gets ~33% of progress)
-      const stepCount = steps.length;
-      const stepSegment = 1 / stepCount; // Each step gets 1/3 of the progress
-
-      let newActiveStepIndex = -1;
-      for (let i = 0; i < stepCount; i++) {
-        const stepStart = i * stepSegment;
-        if (scrollProgress >= stepStart) {
-          newActiveStepIndex = i;
-        }
-      }
-
-      setActiveStepIndex(newActiveStepIndex);
-
-      // Calculate line height based on scroll progress
-      // Line fills proportionally as steps become active
-      const maxLineHeight = calculateLineHeight();
-
-      // When we reach the last step, ensure line is fully extended
-      // Otherwise, animate based on scroll progress
-      if (newActiveStepIndex === stepCount - 1) {
-        // Last step is active - show full line to connect properly
-        setLineHeight(maxLineHeight);
-      } else {
-        // Animate based on scroll progress
-        const lineProgress = scrollProgress;
-        setLineHeight(lineProgress * maxLineHeight);
-      }
+      requestAnimationFrame(updateProgress);
     };
 
-    // Initial check after a small delay to ensure DOM is ready
-    const initialTimeout = setTimeout(() => {
-      handleScroll();
-    }, 100);
-
-    // Throttle scroll events
-    let ticking = false;
-    const throttledHandleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          handleScroll();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener("scroll", throttledHandleScroll, { passive: true });
-    window.addEventListener("resize", throttledHandleScroll, { passive: true });
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
-      clearTimeout(initialTimeout);
-      window.removeEventListener("scroll", throttledHandleScroll);
-      window.removeEventListener("resize", throttledHandleScroll);
+      clearTimeout(t);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
   return (
     <section
       ref={sectionRef}
-      className="flex w-full flex-col items-start bg-[#F5F5F5] px-55.75 py-0 "
+      className="flex w-full flex-col bg-[#F5F5F5] px-55.75 py-0"
     >
-      <div className="flex max-w-5xl self-stretch items-start justify-center gap-20 px-6 py-28">
-        {/* Left Side */}
-        <div className="flex flex-1 flex-col items-start gap-[23.4px]">
-          <h2 className="self-stretch text-5xl font-stretch-expanded text-[#0A0A0A] text-[60px] font-[590] leading-15 tracking-[-1.5px]">
+      <div className="flex max-w-5xl gap-20 px-6 py-28">
+        {/* Left */}
+        <div className="flex flex-1 flex-col gap-[23.4px]">
+          <h2 className="text-[60px] font-[590] tracking-[-1.5px] text-[#0A0A0A]">
             How it works
           </h2>
 
-          <p className="max-w-md self-stretch pb-[8.6px] text-[16.9px] font-normal leading-[29.25px] text-[rgba(10,10,10,0.60)]">
+          <p className="max-w-md text-[16.9px] leading-[29.25px] text-[rgba(10,10,10,0.60)]">
             Your property portfolio, managed by AI and launched on an{" "}
-            <span className="text-[16.9px] font-[510] leading-[29.25px] text-[#0A0A0A]">
+            <span className="font-[510] text-[#0A0A0A]">
               intelligent platform,
             </span>{" "}
             ready to scale with you.
           </p>
 
-          <a
-            href="#"
-            className="flex items-center rounded-2xl bg-[#0A0A0A] px-6 py-3 text-[13.7px] font-[590] leading-5 text-[#F5F5F5]"
-          >
+          <a className="w-fit rounded-2xl bg-[#0A0A0A] px-6 py-3 text-[13.7px] font-[590] text-white">
             Start Managing
           </a>
         </div>
 
-        {/* Right Side */}
-        <div className="relative flex flex-1 flex-col items-start">
-          {/* Vertical Line */}
-          <div
-            ref={lineContainerRef}
-            className="absolute left-5.75 top-6 flex w-0.5 flex-col items-start"
-          >
+        {/* Right */}
+        <div
+          ref={lineContainerRef}
+          className="relative flex flex-1 flex-col"
+        >
+          {lineHeight > 0 && (
             <div
-              className="w-0.5 bg-[#3b82f6] transition-all duration-300 ease-out"
-              style={{
-                height: `${Math.max(lineHeight, 0)}px`,
-                minHeight: "0px",
-              }}
-            />
-          </div>
+              className="absolute left-6 w-0.5"
+              style={{ top: `${lineTop}px`, height: `${lineHeight}px` }}
+            >
+              {/* Static */}
+              <div className="absolute inset-0 bg-neutral-300" />
 
-          <ul
-            ref={stepsListRef}
-            className="flex flex-col items-start self-stretch"
-          >
-            {steps.map(({ title, description, Icon }, index) => {
-              // Step should be visible if it's the active step or any previous step
-              const isVisible = index <= activeStepIndex;
+              {/* Progress – smooth transition when height updates */}
+              <div
+                className="absolute top-0 w-full bg-brand-500 transition-[height] duration-500 ease-out"
+                style={{ height: `${progressHeight}px` }}
+              />
+            </div>
+          )}
 
-              return (
-                <li
-                  key={index}
-                  className={`flex items-start gap-5 self-stretch transition-all duration-700 ease-out ${
-                    index !== steps.length - 1 ? "pb-64" : ""
-                  } ${
-                    isVisible
-                      ? "opacity-100 translate-y-0"
-                      : "opacity-0 translate-y-8"
-                  }`}
-                  style={{
-                    transitionDelay: isVisible ? `${index * 200}ms` : "0ms",
-                  }}
-                >
-                  <div
-                    className={`relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-[#3b82f6] text-white transition-all duration-500 ${
-                      isVisible ? "scale-100" : "scale-90"
-                    }`}
-                    style={{
-                      transitionDelay: isVisible ? `${index * 200}ms` : "0ms",
-                    }}
-                  >
-                    <Icon className="h-5 w-5 shrink-0" />
-                  </div>
+          <ul ref={stepsListRef} className="flex flex-col">
+            {steps.map(({ title, description, Icon }, i) => (
+              <li
+                key={i}
+                className={`flex items-start gap-5 ${
+                  i !== steps.length - 1 ? "pb-64" : ""
+                }`}
+              >
+                <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-brand-500 text-white">
+                  <Icon className="h-5 w-5" />
+                </div>
 
-                  <div className="flex flex-col items-start gap-2 self-stretch pt-1">
-                    <h3 className="self-stretch text-3xl font-bold">{title}</h3>
+                <div className="flex flex-col gap-2 pt-1">
+                  <h3 className="text-3xl font-bold text-[#0A0A0A]">
+                    {title}
+                  </h3>
 
-                    <p className="max-w-[384px] self-stretch text-[15.3px] font-normal leading-6.5 text-[rgba(10,10,10,0.60)]">
-                      {description}
-                    </p>
-                  </div>
-                </li>
-              );
-            })}
+                  <p className="max-w-[384px] text-[15.3px] leading-6.5 text-[rgba(10,10,10,0.60)]">
+                    {description}
+                  </p>
+                </div>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

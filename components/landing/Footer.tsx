@@ -1,4 +1,4 @@
-import { ArrowRight, Building2, Mail } from 'lucide-react';
+import { ArrowRight, Building2, Mail } from "lucide-react";
 
 type FooterLinkGroup = {
   title: string;
@@ -8,38 +8,38 @@ type FooterLinkGroup = {
 
 const FOOTER_LINK_GROUPS: FooterLinkGroup[] = [
   {
-    title: 'MENU',
-    minWidth: 'min-w-[70.06px]',
+    title: "MENU",
+    minWidth: "min-w-[70.06px]",
     links: [
-      { label: 'Customers', href: '#' },
-      { label: 'Resources', href: '#' },
-      { label: 'Careers', href: '#' },
+      { label: "Customers", href: "#" },
+      { label: "Resources", href: "#" },
+      { label: "Careers", href: "#" },
     ],
   },
   {
-    title: 'COMPANY',
+    title: "COMPANY",
     links: [
-      { label: 'Help', href: '#' },
-      { label: 'Terms', href: '#' },
-      { label: 'Security', href: '#' },
+      { label: "Help", href: "#" },
+      { label: "Terms", href: "#" },
+      { label: "Security", href: "#" },
     ],
   },
   {
-    title: 'SOCIAL',
-    minWidth: 'min-w-[68.17px]',
+    title: "SOCIAL",
+    minWidth: "min-w-[68.17px]",
     links: [
-      { label: 'X (Twitter)', href: '#' },
-      { label: 'Email', href: '#' },
-      { label: 'LinkedIn', href: '#' },
+      { label: "X (Twitter)", href: "#" },
+      { label: "Email", href: "#" },
+      { label: "LinkedIn", href: "#" },
     ],
   },
 ];
 
 const headingClass =
-  'flex flex-col items-start self-stretch text-white/50  text-[12px] font-[510] leading-[16px] tracking-[0.6px] uppercase';
+  "flex flex-col items-start self-stretch text-white/50  text-[12px] font-[510] leading-[16px]  uppercase";
 
 const linkClass =
-  'flex flex-col items-start self-stretch pt-[2.75px] pb-[1.25px] text-white text-[13.7px] font-[400] leading-[20px]';
+  "flex flex-col items-start self-stretch pt-[2.75px] pb-[1.25px] text-white text-[13.7px] font-[400] leading-[20px]";
 
 const Footer = () => {
   return (
@@ -56,7 +56,7 @@ const Footer = () => {
               <div className="h-[32px] w-[32px] rounded-lg bg-white flex items-center justify-center text-blue-600 shadow-sm">
                 <Building2 className="w-5 h-5" />
               </div>
-              <span className="flex flex-col items-start text-white font-bold text-xl tracking-tight">
+              <span className="flex flex-col items-start text-white font-bold text-xl ">
                 PropStack
               </span>
             </a>
@@ -70,7 +70,7 @@ const Footer = () => {
                 <div
                   key={group.title}
                   className={`flex flex-col items-start gap-[16px] self-stretch ${
-                    group.minWidth ?? ''
+                    group.minWidth ?? ""
                   }`}
                 >
                   <h2 className={headingClass}>{group.title}</h2>
@@ -104,13 +104,13 @@ const Footer = () => {
             className="absolute inset-0 z-0 blur-[2px] scale-[1.02]"
             style={{
               backgroundImage: "url('/Assets/bg2.png')",
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
             }}
           />
 
-          <h1 className="relative z-10 text-4xl md:text-5xl lg:text-[56px] leading-[1.1] font-medium tracking-tight text-black max-w-2xl mb-10">
+          <h1 className="relative z-10 text-4xl md:text-5xl lg:text-[56px] leading-[1.1] font-semibold text-primary mb-10">
             Start building something
             <br />
             truly amazing today

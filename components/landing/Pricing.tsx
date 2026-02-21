@@ -155,7 +155,7 @@ const Pricing: React.FC = () => {
     <section className="flex w-full flex-col items-start bg-[#F5F5F5]  px-55.75 py-28">
       <div className="flex max-w-5xl flex-col items-start gap-16 self-stretch">
         <div className="flex flex-col items-center gap-[13.3px] self-stretch pt-[2.75px]">
-          <h2 className="self-stretch text-center text-[#0A0A0A] text-[48px] font-[590] leading-12 tracking-[-1.2px]">
+          <h2 className="self-stretch text-center text-primary text-[48px] leading-12 font-semibold">
             Simple, transparent pricing
           </h2>
 
