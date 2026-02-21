@@ -1,6 +1,5 @@
 'use client';
 
-import OneTapComponent from '@/components/auth/OneTapComponent';
 import { PropLogo } from '@/components/dashboard/PropLogo';
 import { Button } from '@/components/ui/button';
 import {
@@ -37,12 +36,14 @@ const GoogleIcon = () => (
   </svg>
 );
 
-export default function LoginPage() {
+export default function SignUpPage() {
   const supabase = createClient();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const handleGoogleSignIn = async () => {
     await supabase.auth.signInWithOAuth({
@@ -53,14 +54,28 @@ export default function LoginPage() {
     });
   };
 
-  const handleEmailSignIn = async (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+      },
     });
 
     if (error) {
@@ -69,8 +84,60 @@ export default function LoginPage() {
       return;
     }
 
-    window.location.href = '/dashboard';
+    setSuccess(true);
+    setLoading(false);
   };
+
+  if (success) {
+    return (
+      <div className="flex min-h-svh items-center justify-center bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-100 p-6">
+        <Card className="relative w-full max-w-md border-gray-200/80 shadow-xl shadow-gray-200/50 backdrop-blur-sm">
+          <CardHeader className="items-center space-y-4 pb-2 pt-8">
+            <div className="flex items-center justify-center">
+              <PropLogo size={32} />
+            </div>
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-green-100">
+              <svg
+                className="h-7 w-7 text-green-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="2.5"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
+                />
+              </svg>
+            </div>
+            <div className="space-y-1.5 text-center">
+              <CardTitle className="text-2xl font-bold tracking-tight text-gray-900">
+                Check your email
+              </CardTitle>
+              <CardDescription className="text-sm text-gray-500">
+                We&apos;ve sent a confirmation link to{' '}
+                <span className="font-medium text-gray-700">{email}</span>.
+                Click the link to verify your account.
+              </CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent className="px-8 pb-8 pt-4 text-center">
+            <p className="text-xs text-gray-400 mb-4">
+              Didn&apos;t receive the email? Check your spam folder or try
+              again.
+            </p>
+            <Link
+              href="/auth/login"
+              className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+            >
+              Back to sign in
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-svh items-center justify-center bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-100 p-6">
@@ -81,10 +148,10 @@ export default function LoginPage() {
           </div>
           <div className="space-y-1.5 text-center">
             <CardTitle className="text-2xl font-bold tracking-tight text-gray-900">
-              Welcome back
+              Create an account
             </CardTitle>
             <CardDescription className="text-sm text-gray-500">
-              Sign in to manage your properties
+              Get started managing your properties
             </CardDescription>
           </div>
         </CardHeader>
@@ -108,7 +175,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <form onSubmit={handleEmailSignIn} className="space-y-4">
+          <form onSubmit={handleSignUp} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email" className="text-sm text-gray-700">
                 Email
@@ -131,9 +198,27 @@ export default function LoginPage() {
               <Input
                 id="password"
                 type="password"
-                placeholder="••••••••"
+                placeholder="At least 6 characters"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
+                className="h-11"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label
+                htmlFor="confirm-password"
+                className="text-sm text-gray-700"
+              >
+                Confirm Password
+              </Label>
+              <Input
+                id="confirm-password"
+                type="password"
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 required
                 className="h-11"
               />
@@ -148,22 +233,22 @@ export default function LoginPage() {
               disabled={loading}
               className="w-full h-11 bg-blue-600 text-white hover:bg-blue-700 transition-colors"
             >
-              {loading ? 'Signing in...' : 'Sign in'}
+              {loading ? 'Creating account...' : 'Create account'}
             </Button>
           </form>
 
           <p className="mt-4 text-center text-sm text-gray-500">
-            Don&apos;t have an account?{' '}
+            Already have an account?{' '}
             <Link
-              href="/auth/signup"
+              href="/auth/login"
               className="font-medium text-blue-600 hover:text-blue-700 transition-colors"
             >
-              Sign up
+              Sign in
             </Link>
           </p>
 
           <p className="mt-6 text-center text-xs text-gray-400">
-            By continuing, you agree to our{' '}
+            By creating an account, you agree to our{' '}
             <a
               href="/terms"
               className="underline hover:text-gray-600 transition-colors"
@@ -180,8 +265,6 @@ export default function LoginPage() {
           </p>
         </CardContent>
       </Card>
-
-      <OneTapComponent />
     </div>
   );
 }
