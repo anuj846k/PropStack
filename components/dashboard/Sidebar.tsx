@@ -3,15 +3,18 @@
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { createClient } from '@/lib/supabase/client';
 import {
   Building2,
   FileText,
   LayoutDashboard,
+  LogOut,
   MessageSquare,
   Sparkles,
   Users,
   Wrench,
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { ElementType } from 'react';
 
 import { PropLogo } from './PropLogo';
@@ -58,6 +61,14 @@ interface SidebarProps {
 }
 
 export function Sidebar({ screen, setScreen }: SidebarProps) {
+  const supabase = createClient();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push('/auth/login');
+  };
+
   return (
     <div className="w-64 border-r border-gray-200 bg-gray-50/50 flex flex-col p-5 shrink-0 h-full overflow-y-auto">
       <div className="pl-1 mb-8">
@@ -134,6 +145,14 @@ export function Sidebar({ screen, setScreen }: SidebarProps) {
       </div>
 
       <Separator className="my-4" />
+
+      <button
+        onClick={handleLogout}
+        className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-red-600 hover:bg-red-50 transition-colors mb-4"
+      >
+        <LogOut size={18} />
+        <span className="text-sm font-medium">Logout</span>
+      </button>
 
       <div className="bg-white rounded-xl p-3 border border-gray-200 shadow-sm flex items-center gap-3">
         <Avatar className="h-9 w-9 border border-blue-100">
