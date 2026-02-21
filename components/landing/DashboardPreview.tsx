@@ -76,7 +76,7 @@ export default function DashboardPreview() {
             {/* Metric 1 */}
             <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 flex flex-col gap-2">
               <div className="flex items-center justify-between text-gray-500">
-                <span className="text-xs font-medium uppercase tracking-wider">
+                <span className="text-[10px] font-medium uppercase tracking-wider">
                   Total Monthly Rent
                 </span>
                 <TrendingUp size={14} className="text-gray-400" />
@@ -93,7 +93,7 @@ export default function DashboardPreview() {
             {/* Metric 2 */}
             <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 flex flex-col gap-2">
               <div className="flex items-center justify-between text-gray-500">
-                <span className="text-xs font-medium uppercase tracking-wider">
+                <span className="text-[10px] font-medium uppercase tracking-wider">
                   Active Maintenance
                 </span>
                 <Wrench size={14} className="text-gray-400" />
@@ -101,7 +101,7 @@ export default function DashboardPreview() {
               <div className="text-2xl font-semibold text-gray-900">
                 12 Open
               </div>
-              <div className="text-xs text-gray-500 flex items-center gap-1">
+              <div className="text-[10px] text-gray-500 flex items-center gap-1">
                 <AlertCircle size={12} className="text-gray-400" />
                 <span className="text-gray-600">3 Critical</span>
               </div>
@@ -110,7 +110,7 @@ export default function DashboardPreview() {
             {/* Metric 3 */}
             <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 flex flex-col gap-2">
               <div className="flex items-center justify-between text-gray-500">
-                <span className="text-xs font-medium uppercase tracking-wider">
+                <span className="text-[10px] font-medium uppercase tracking-wider">
                   AI Efficiency
                 </span>
                 <Clock size={14} className="text-gray-400" />
@@ -124,7 +124,7 @@ export default function DashboardPreview() {
             {/* Metric 4 */}
             <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 flex flex-col gap-2">
               <div className="flex items-center justify-between text-gray-500">
-                <span className="text-xs font-medium uppercase tracking-wider">
+                <span className="text-[10px] font-medium uppercase tracking-wider">
                   Vacancy Cost
                 </span>
                 <TrendingDown size={14} className="text-gray-400" />
@@ -132,14 +132,14 @@ export default function DashboardPreview() {
               <div className="text-2xl font-semibold text-gray-900">
                 ₹31,000
               </div>
-              <div className="text-xs text-gray-500">lost this month</div>
+              <div className="text-[10px] text-gray-500">lost this month</div>
             </div>
           </div>
 
           {/* Chart Area */}
           <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 flex flex-col gap-4 flex-1 min-h-[180px]">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-medium text-gray-900">
+              <h2 className="text-[13.7px] font-medium text-gray-900">
                 Predictive Rent & Occupancy
               </h2>
               <div className="flex items-center gap-2 text-xs text-gray-500">

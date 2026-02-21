@@ -11,7 +11,7 @@ export default function Hero() {
             <span className="text-sm font-medium text-black">
               Now Available
             </span>
-            <span className="text-sm font-medium text-[#3b82f6]">✦</span>
+            <span className="text-sm font-medium text-brand-500">✦</span>
           </div>
 
           <div className="mb-6 flex flex-col items-center leading-none text-center">
@@ -19,7 +19,7 @@ export default function Hero() {
               <span className="block">Manage Properties</span>
               <span className="block">
                 with{' '}
-                <span className="font-serif font-normal italic text-[#3b82f6]">
+                <span className="font-serif font-normal italic text-brand-500">
                   AI Intelligence
                 </span>
               </span>
