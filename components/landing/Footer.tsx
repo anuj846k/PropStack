@@ -101,7 +101,7 @@ const Footer = () => {
         <div className="relative w-full rounded-[32px] overflow-hidden shadow-2xl flex flex-col items-center justify-center text-center px-4 py-20 md:py-28 border border-white/20">
           {/* Blurred Background Image */}
           <div
-            className="absolute inset-0 z-0 blur-[2px] scale-[1.02]"
+            className="absolute inset-0 z-0 blur-[7px] scale-[1.02]"
             style={{
               backgroundImage: "url('/Assets/bg2.png')",
               backgroundSize: "cover",
