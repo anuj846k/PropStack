@@ -39,16 +39,16 @@ const FAQ = () => {
   };
 
   return (
-    <section className="flex w-full flex-col items-center gap-16 bg-[#F5F5F5] py-30">
-      <div className="flex w-3xl max-w-3xl flex-col items-start gap-16">
+    <section className="flex w-full flex-col items-center gap-16 bg-[#F5F5F5] py-16 md:py-30 px-4 md:px-8">
+      <div className="flex w-full max-w-3xl flex-col items-center gap-8 md:gap-16">
         {/* Upper section */}
         <div className="flex flex-col items-center gap-[13.3px] self-stretch pt-[2.75px]">
-          <h1 className="flex flex-col items-center self-stretch text-center text-[#0A0A0A] text-[48px] font-[590] leading-12 tracking-[-1.2px]">
+          <h1 className="flex flex-col items-center self-stretch text-center text-[#0A0A0A] text-4xl md:text-[48px] font-semibold leading-tight md:leading-12 ">
             Everything you need to know
           </h1>
 
-          <div className="flex w-xl max-w-xl flex-col items-center pt-[2.7px] text-center text-[#737373] text-[16.9px] font-normal leading-7">
-            Can't find the answer you're looking for? Reach out!
+          <div className="flex w-full max-w-xl flex-col items-center pt-[2.7px] text-center text-[#737373] text-[16.9px] font-normal leading-7">
+            Can&apos;t find the answer you&apos;re looking for? Reach out!
           </div>
 
           <div className="flex flex-wrap content-center items-center justify-center self-stretch gap-x-3 gap-y-0 pt-[18.7px]">
@@ -82,9 +82,8 @@ const FAQ = () => {
                 </h1>
 
                 <MyChevronDown
-                  className={`flex flex-col items-start w-5 h-5 transition-transform duration-300 ${
-                    activeIndex === index ? 'rotate-180' : 'rotate-0'
-                  }`}
+                  className={`flex flex-col items-start w-5 h-5 transition-transform duration-300 ${activeIndex === index ? 'rotate-180' : 'rotate-0'
+                    }`}
                 />
               </div>
 

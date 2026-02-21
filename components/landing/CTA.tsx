@@ -53,9 +53,8 @@ export default function CTA() {
             {[1, 2, 3, 4, 5].map((i) => (
               <div
                 key={i}
-                className={`h-[0.8cqi] bg-blue-500 ${
-                  i === 5 ? 'w-1/2' : 'w-3/4'
-                }`}
+                className={`h-[0.8cqi] bg-blue-500 ${i === 5 ? 'w-1/2' : 'w-3/4'
+                  }`}
               />
             ))}
           </div>

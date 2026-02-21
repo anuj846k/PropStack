@@ -111,19 +111,19 @@ const HowItWorks = () => {
       <div className="flex max-w-5xl gap-20 px-6 py-28">
         {/* Left */}
         <div className="flex flex-1 flex-col gap-[23.4px]">
-          <h2 className="text-[60px] font-[590] tracking-[-1.5px] text-[#0A0A0A]">
+          <h2 className="text-[60px] font-semibold text-primary">
             How it works
           </h2>
 
           <p className="max-w-md text-[16.9px] leading-[29.25px] text-[rgba(10,10,10,0.60)]">
             Your property portfolio, managed by AI and launched on an{" "}
-            <span className="font-[510] text-[#0A0A0A]">
+            <span className="font-normal text-primary">
               intelligent platform,
             </span>{" "}
             ready to scale with you.
           </p>
 
-          <a className="w-fit rounded-2xl bg-[#0A0A0A] px-6 py-3 text-[13.7px] font-[590] text-white">
+          <a className="w-fit rounded-2xl bg-primary px-6 py-3 text-[13.7px] font-medium text-white">
             Start Managing
           </a>
         </div>

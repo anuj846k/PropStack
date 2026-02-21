@@ -1,7 +1,8 @@
 'use client';
 
+import { useState } from 'react';
 import { ArrowDown, LeftWingCurve, RightWingCurve } from '@/components/icons';
-import { ArrowDownRight, Building2 } from 'lucide-react';
+import { ArrowDownRight, Building2, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 
 const navItems = [
@@ -11,15 +12,17 @@ const navItems = [
 ];
 
 export default function Navbar() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <nav className="absolute top-0 left-0 right-0 z-50 flex justify-center items-start">
-      <div className="flex items-start">
-        <LeftWingCurve className="h-12.5 w-12.5 text-white" />
+      <div className="flex items-start w-full px-4 md:px-0 md:w-auto">
+        <LeftWingCurve className="hidden md:block h-12.5 w-12.5 text-white shrink-0" />
 
         {/* Central Content */}
-        <div className="bg-white text-black px-4 flex items-center justify-between h-[80px] w-[1024px] rounded-b-[32px] text-[14.4px] font-medium leading-5 tracking-wide">
+        <div className="bg-white text-black px-4 flex items-center justify-between h-[80px] w-full max-w-[1024px] rounded-b-[32px] text-[14.4px] font-medium leading-5 tracking-wide">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 pl-4">
+          <Link href="/" className="flex items-center gap-2 md:pl-4">
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-sm">
               <Building2 className="w-5 h-5" />
             </div>
@@ -43,7 +46,7 @@ export default function Navbar() {
           </div>
 
           {/* Right side */}
-          <div className="flex items-center gap-4 pr-2">
+          <div className="hidden md:flex items-center gap-4 pr-2">
             <Link
               href="#"
               className="text- font-medium text-primary transition-colors"
@@ -65,11 +68,66 @@ export default function Navbar() {
               </span>
             </Link>
           </div>
+
+          {/* Mobile Right side: Hamburger */}
+          <div className="flex md:hidden items-center pr-2">
+            <button
+              className="p-2 text-primary cursor-pointer"
+              onClick={() => setIsMobileMenuOpen(true)}
+              aria-label="Open menu"
+            >
+              <Menu className="w-6 h-6" />
+            </button>
+          </div>
         </div>
 
         {/* Right Wing */}
-        <RightWingCurve className="h-12.5 w-12.5 text-white" />
+        <RightWingCurve className="hidden md:block h-12.5 w-12.5 text-white shrink-0" />
       </div>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/60 backdrop-blur-lg">
+          <button
+            className="absolute top-6 right-6 text-white p-2 transition-transform hover:scale-110 active:scale-95"
+            onClick={() => setIsMobileMenuOpen(false)}
+            aria-label="Close menu"
+          >
+            <X className="w-8 h-8" />
+          </button>
+
+          <div className="flex flex-col items-center gap-8">
+            {navItems.map((item) => (
+              <Link
+                key={item.label}
+                href="#"
+                className="text-white text-3xl font-medium tracking-tight transition-all hover:text-white/80 active:scale-95"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+
+            <div className="w-12 h-px bg-white/20 my-4" />
+
+            <Link
+              href="#"
+              className="text-white text-2xl font-medium transition-all hover:text-white/80 active:scale-95"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Sign in
+            </Link>
+
+            <Link
+              href="#"
+              className="mt-2 bg-white text-black px-8 py-3.5 rounded-full text-xl font-semibold tracking-wide transition-all hover:scale-105 active:scale-95"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Try for free
+            </Link>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

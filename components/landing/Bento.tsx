@@ -219,9 +219,8 @@ const Bento = () => {
                 {AVATARS.map((avatar, index) => (
                   <div
                     key={avatar.src}
-                    className={`relative h-12 w-12 overflow-hidden rounded-full border-2 border-white/25 ${
-                      index === 0 ? "" : "-ml-3"
-                    }`}
+                    className={`relative h-12 w-12 overflow-hidden rounded-full border-2 border-white/25 ${index === 0 ? "" : "-ml-3"
+                      }`}
                   >
                     <Image
                       src={avatar.src}

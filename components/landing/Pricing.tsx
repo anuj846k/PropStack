@@ -90,11 +90,11 @@ const PricingCard: React.FC<PricingCardProps> = ({ plan }) => {
       )}
 
       <div className={`${cardBase} ${cardStyle}`}>
-        <h3 className="flex w-63.5 flex-col items-start text-[#0A0A0A] text-[18.8px] font-black leading-7">
+        <h3 className="flex w-full md:w-63.5 flex-col items-start text-[#0A0A0A] text-[18.8px] font-black leading-7">
           {plan.name}
         </h3>
 
-        <div className="flex w-63.5 flex-col items-start pt-4">
+        <div className="flex w-full md:w-63.5 flex-col items-start pt-4">
           <div className="flex flex-col items-start gap-2 self-stretch">
             <div className="flex items-end gap-3 self-stretch">
               <div className="flex flex-col items-start text-[#0A0A0A] text-[47.8px] font-bold leading-12 tracking-[-1.2px]">
@@ -112,19 +112,18 @@ const PricingCard: React.FC<PricingCardProps> = ({ plan }) => {
           </div>
         </div>
 
-        <div className="flex w-63.5 flex-col items-start pt-6">
+        <div className="flex w-full md:w-63.5 flex-col items-start pt-6">
           <button
-            className={`flex flex-col items-center justify-center self-stretch rounded-2xl py-3 text-center text-[13.7px] font-[590] leading-5 ${
-              plan.highlight
-                ? 'bg-[#0A0A0A] text-white'
-                : 'bg-[#F5F5F5] text-[#0A0A0A]'
-            }`}
+            className={`flex flex-col items-center justify-center self-stretch rounded-2xl py-3 text-center text-[13.7px] font-[590] leading-5 ${plan.highlight
+              ? 'bg-[#0A0A0A] text-white'
+              : 'bg-[#F5F5F5] text-[#0A0A0A]'
+              }`}
           >
             Get Started
           </button>
         </div>
 
-        <div className="flex w-63.5 flex-col items-start pt-6">
+        <div className="flex w-full md:w-63.5 flex-col items-start pt-6">
           <div className="flex flex-col items-start gap-4 self-stretch">
             <p className="flex flex-col items-start self-stretch text-[#737373] text-[13.6px] font-[510] leading-5">
               Includes:
@@ -152,20 +151,20 @@ const PricingCard: React.FC<PricingCardProps> = ({ plan }) => {
 
 const Pricing: React.FC = () => {
   return (
-    <section className="flex w-full flex-col items-start bg-[#F5F5F5]  px-55.75 py-28">
-      <div className="flex max-w-5xl flex-col items-start gap-16 self-stretch">
+    <section className="flex w-full flex-col items-center bg-[#F5F5F5] px-4 md:px-12 lg:px-55.75 py-16 md:py-28">
+      <div className="flex w-full max-w-5xl flex-col items-center lg:items-start gap-12 md:gap-16 self-stretch">
         <div className="flex flex-col items-center gap-[13.3px] self-stretch pt-[2.75px]">
           <h2 className="self-stretch text-center text-primary text-[48px] leading-12 font-semibold">
             Simple, transparent pricing
           </h2>
 
-          <p className="w-2xl max-w-2xl pt-[2.7px] text-center text-[#737373] text-[16.9px] font-normal leading-7">
+          <p className="w-full max-w-2xl pt-[2.7px] text-center text-[#737373] text-[16.9px] font-normal leading-7 px-4">
             Choose the plan that works best for your portfolio. All plans
             include a 14-day free trial.
           </p>
         </div>
 
-        <div className="flex items-start justify-center gap-8 self-stretch">
+        <div className="flex flex-col lg:flex-row items-stretch lg:items-start justify-center gap-8 self-stretch px-4 lg:px-0">
           {plans.map((plan: Plan, index: number) => (
             <PricingCard key={index} plan={plan} />
           ))}
