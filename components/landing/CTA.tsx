@@ -1,5 +1,6 @@
 import { ArrowRight, Building2 } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function CTA() {
   return (
@@ -22,9 +23,9 @@ export default function CTA() {
             <div className="w-[4cqi] h-[4cqi] bg-blue-600 rounded-[0.8cqi] flex items-center justify-center text-white shadow-sm">
               <Building2 className="w-[2.5cqi] h-[2.5cqi]" />
             </div>
-            <span className="text-[4.5cqi] font-bold tracking-[0.2em] text-black uppercase">
+            <Link href="/dashboard" className="text-[4.5cqi] font-bold tracking-[0.2em] text-black uppercase hover:text-blue-600 transition-colors">
               Get Started
-            </span>
+            </Link>
           </div>
 
           {/* Heading */}

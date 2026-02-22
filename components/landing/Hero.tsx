@@ -1,5 +1,6 @@
 import { ArrowDownRight } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import DashboardPreview from './DashboardPreview';
 
 export default function Hero() {
@@ -32,8 +33,8 @@ export default function Hero() {
             screening.
           </p>
 
-          <div className="group relative">
-            <button className="relative flex h-14 items-center rounded-xl bg-[#3b82f6] pr-11">
+          <Link href="/dashboard" className="group relative">
+            <span className="relative flex h-14 items-center rounded-xl bg-[#3b82f6] pr-11">
               <span className="flex h-full items-center rounded-xl bg-black px-6 text-[15px] font-medium leading-6 text-white">
                 Get Started
               </span>
@@ -43,8 +44,8 @@ export default function Hero() {
                   className="transition-transform duration-300 group-hover:-rotate-45 group-hover:translate-x-0.5"
                 />
               </span>
-            </button>
-          </div>
+            </span>
+          </Link>
         </div>
 
         <div className="-mt-2 flex w-full px-4 md:justify-center">

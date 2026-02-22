@@ -8,6 +8,7 @@ import {
   Building2,
   FileText,
   LayoutDashboard,
+  Loader2,
   LogOut,
   MessageSquare,
   Sparkles,
@@ -15,7 +16,7 @@ import {
   Wrench,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { ElementType } from 'react';
+import { ElementType, useState } from 'react';
 
 import { PropLogo } from './PropLogo';
 
@@ -63,8 +64,10 @@ interface SidebarProps {
 export function Sidebar({ screen, setScreen }: SidebarProps) {
   const supabase = createClient();
   const router = useRouter();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
+    setIsLoggingOut(true);
     await supabase.auth.signOut();
     router.push('/auth/login');
   };
@@ -148,10 +151,17 @@ export function Sidebar({ screen, setScreen }: SidebarProps) {
 
       <button
         onClick={handleLogout}
-        className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-red-600 hover:bg-red-50 transition-colors mb-4"
+        disabled={isLoggingOut}
+        className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-red-600 hover:bg-red-50 transition-colors mb-4 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <LogOut size={18} />
-        <span className="text-sm font-medium">Logout</span>
+        {isLoggingOut ? (
+          <Loader2 size={18} className="animate-spin" />
+        ) : (
+          <LogOut size={18} />
+        )}
+        <span className="text-sm font-medium">
+          {isLoggingOut ? 'Logging out...' : 'Logout'}
+        </span>
       </button>
 
       <div className="bg-white rounded-xl p-3 border border-gray-200 shadow-sm flex items-center gap-3">

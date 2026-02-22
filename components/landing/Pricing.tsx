@@ -1,5 +1,6 @@
 import React from 'react';
 import { TickMark } from '../icons';
+import Link from 'next/link';
 
 type Plan = {
   name: string;
@@ -113,14 +114,15 @@ const PricingCard: React.FC<PricingCardProps> = ({ plan }) => {
         </div>
 
         <div className="flex w-full md:w-63.5 flex-col items-start pt-6">
-          <button
+          <Link
+            href="/dashboard"
             className={`flex flex-col items-center justify-center self-stretch rounded-2xl py-3 text-center text-[13.7px] font-[590] leading-5 ${plan.highlight
               ? 'bg-[#0A0A0A] text-white'
               : 'bg-[#F5F5F5] text-[#0A0A0A]'
               }`}
           >
             Get Started
-          </button>
+          </Link>
         </div>
 
         <div className="flex w-full md:w-63.5 flex-col items-start pt-6">

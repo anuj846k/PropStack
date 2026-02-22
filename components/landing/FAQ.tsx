@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { MyChevronDown } from '../icons';
+import Link from 'next/link';
 
 type FAQItem = {
   que: string;
@@ -52,12 +53,12 @@ const FAQ = () => {
           </div>
 
           <div className="flex flex-wrap content-center items-center justify-center self-stretch gap-x-3 gap-y-0 pt-[18.7px]">
-            <a
-              href=""
+            <Link
+              href="/dashboard"
               className="flex items-center justify-center px-6 py-2.5 text-center text-[#F5F5F5] text-[13.7px] font-[590] leading-5 rounded-xl bg-[#0A0A0A]"
             >
               Get Started
-            </a>
+            </Link>
 
             <a
               href=""
