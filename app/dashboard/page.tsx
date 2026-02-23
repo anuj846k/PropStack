@@ -25,3 +25,5 @@ export default function App() {
     </main>
   );
 }
+
+// TODO: Add loading state when fetching data for each section.
