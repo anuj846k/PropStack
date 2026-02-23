@@ -63,3 +63,4 @@ The Python function securely hits Supabase, grabs the data, and returns it to th
 
 
 Why this is the standard for production: It completely eliminates the risk of SQL injection or hallucinations destroying your database. You strictly control exactly what data the LLM is legally allowed to fetch or edit.
+<!-- This is a comment -->
