@@ -93,7 +93,7 @@ export default function LoginPage() {
           <Button
             onClick={handleGoogleSignIn}
             variant="outline"
-            className="w-full gap-3 border-gray-300 bg-white py-6 text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-50 hover:shadow-md hover:border-gray-400"
+            className="w-full gap-3 border-gray-300 bg-white py-6 text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-50 hover:shadow-md hover:border-gray-400 cursor-pointer"
           >
             <GoogleIcon />
             Continue with Google
