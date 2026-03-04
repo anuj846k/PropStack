@@ -5,12 +5,25 @@ import { useState } from 'react';
 import { AgentsSection } from '@/components/dashboard/AgentsSection';
 import { ChatSection } from '@/components/dashboard/ChatSection';
 import { DashboardSection } from '@/components/dashboard/DashboardSection';
+import { PropertiesSection } from '@/components/dashboard/PropertiesSection';
 import { Sidebar } from '@/components/dashboard/Sidebar';
-import { TenantsSection } from '@/components/dashboard/TenantsSection';
+import { TenantDetailPage } from '@/components/dashboard/TenantDetailPage';
 import { TicketsSection } from '@/components/dashboard/TicketsSection';
+import { type Tenant } from '@/lib/api';
 
 export default function App() {
   const [screen, setScreen] = useState('dashboard');
+  const [selectedTenant, setSelectedTenant] = useState<Tenant | null>(null);
+
+  const handleViewTenant = (tenant: Tenant) => {
+    setSelectedTenant(tenant);
+    setScreen('tenant-detail');
+  };
+
+  const handleBackFromTenant = () => {
+    setSelectedTenant(null);
+    setScreen('properties');
+  };
 
   return (
     <main className="h-screen w-full bg-white font-sans overflow-hidden">
@@ -20,10 +33,11 @@ export default function App() {
         {screen === 'agents' && <AgentsSection />}
         {screen === 'chat' && <ChatSection />}
         {screen === 'tickets' && <TicketsSection />}
-        {screen === 'tenants' && <TenantsSection />}
+        {screen === 'properties' && <PropertiesSection onViewTenant={handleViewTenant} />}
+        {screen === 'tenant-detail' && selectedTenant && (
+          <TenantDetailPage tenant={selectedTenant} onBack={handleBackFromTenant} />
+        )}
       </div>
     </main>
   );
 }
-
-// TODO: Add loading state when fetching data for each section.

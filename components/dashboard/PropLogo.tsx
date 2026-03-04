@@ -6,12 +6,6 @@ export function PropLogo({ size = 28 }: { size?: number }) {
       <div className="bg-blue-600 rounded-lg flex items-center justify-center p-1.5 shadow-sm text-white">
         <Building2 size={size - 8} strokeWidth={2.5} />
       </div>
-      <span
-        className="font-bold text-gray-900 tracking-tight"
-        style={{ fontSize: size - 4 }}
-      >
-        PropStack
-      </span>
     </div>
   );
 }

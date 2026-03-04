@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { LoadingProvider } from '@/components/loading-provider';
 
 export const metadata: Metadata = {
   title: 'Propstack',
@@ -13,7 +14,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <LoadingProvider>
+          {children}
+        </LoadingProvider>
+      </body>
     </html>
   );
 }

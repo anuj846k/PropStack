@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { createClient } from '@/lib/supabase/client';
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { createClient } from "@/lib/supabase/client";
 import {
   Building2,
   FileText,
@@ -12,13 +12,12 @@ import {
   LogOut,
   MessageSquare,
   Sparkles,
-  Users,
   Wrench,
-} from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { ElementType, useState } from 'react';
+} from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ElementType, useState } from "react";
 
-import { PropLogo } from './PropLogo';
+import { PropLogo } from "./PropLogo";
 
 interface SidebarItemProps {
   id: string;
@@ -40,9 +39,9 @@ export function SidebarItem({
   return (
     <button
       onClick={() => setScreen(id)}
-      className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${active ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-600 hover:bg-gray-100/50 hover:text-gray-900'}`}
+      className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${active ? "bg-blue-50 text-blue-700 font-medium" : "text-gray-600 hover:bg-gray-100/50 hover:text-gray-900"}`}
     >
-      <Icon size={18} className={active ? 'text-blue-600' : 'text-gray-500'} />
+      <Icon size={18} className={active ? "text-blue-600" : "text-gray-500"} />
       <span className="flex-1 text-left text-sm">{label}</span>
       {badge && (
         <Badge
@@ -69,13 +68,19 @@ export function Sidebar({ screen, setScreen }: SidebarProps) {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     await supabase.auth.signOut();
-    router.push('/auth/login');
+    router.push("/auth/login");
   };
 
   return (
     <div className="w-64 border-r border-gray-200 bg-gray-50/50 flex flex-col p-5 shrink-0 h-full overflow-y-auto">
-      <div className="pl-1 mb-8">
+      <div className="pl-1 mb-8 flex items-center gap-2">
         <PropLogo size={26} />
+        <span
+          className="font-bold text-gray-900 tracking-tight"
+          style={{ fontSize: 22 }}
+        >
+          PropStack
+        </span>
       </div>
 
       <div className="space-y-6 flex-1">
@@ -85,14 +90,14 @@ export function Sidebar({ screen, setScreen }: SidebarProps) {
           </p>
           <div className="space-y-1">
             <SidebarItem
-              active={screen === 'dashboard'}
+              active={screen === "dashboard"}
               id="dashboard"
               label="Dashboard"
               icon={LayoutDashboard}
               setScreen={setScreen}
             />
             <SidebarItem
-              active={screen === 'agents'}
+              active={screen === "agents"}
               id="agents"
               label="AI Agents"
               icon={Sparkles}
@@ -100,25 +105,18 @@ export function Sidebar({ screen, setScreen }: SidebarProps) {
               setScreen={setScreen}
             />
             <SidebarItem
-              active={screen === 'chat'}
+              active={screen === "chat"}
               id="chat"
               label="Ask Sara"
               icon={MessageSquare}
               setScreen={setScreen}
             />
             <SidebarItem
-              active={screen === 'tickets'}
+              active={screen === "tickets"}
               id="tickets"
               label="Maintenance"
               icon={Wrench}
               badge="2"
-              setScreen={setScreen}
-            />
-            <SidebarItem
-              active={screen === 'tenants'}
-              id="tenants"
-              label="Tenants"
-              icon={Users}
               setScreen={setScreen}
             />
           </div>
@@ -130,14 +128,14 @@ export function Sidebar({ screen, setScreen }: SidebarProps) {
           </p>
           <div className="space-y-1">
             <SidebarItem
-              active={screen === 'properties'}
+              active={screen === "properties"}
               id="properties"
               label="Properties"
               icon={Building2}
               setScreen={setScreen}
             />
             <SidebarItem
-              active={screen === 'documents'}
+              active={screen === "documents"}
               id="documents"
               label="Documents"
               icon={FileText}
@@ -160,7 +158,7 @@ export function Sidebar({ screen, setScreen }: SidebarProps) {
           <LogOut size={18} />
         )}
         <span className="text-sm font-medium">
-          {isLoggingOut ? 'Logging out...' : 'Logout'}
+          {isLoggingOut ? "Logging out..." : "Logout"}
         </span>
       </button>
 
