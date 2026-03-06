@@ -1,16 +1,15 @@
 "use client";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { createClient } from "@/lib/supabase/client";
 import {
   Building2,
   FileText,
+  HelpCircle,
   LayoutDashboard,
   Loader2,
   LogOut,
   MessageSquare,
+  Settings,
   Sparkles,
   Wrench,
 } from "lucide-react";
@@ -19,39 +18,50 @@ import { ElementType, useState } from "react";
 
 import { PropLogo } from "./PropLogo";
 
-interface SidebarItemProps {
+interface SidebarIconProps {
   id: string;
-  label: string;
   icon: ElementType;
-  badge?: string;
+  label: string;
   active: boolean;
   setScreen: (id: string) => void;
+  badge?: number;
 }
 
-export function SidebarItem({
+function SidebarIcon({
   id,
-  label,
   icon: Icon,
-  badge,
+  label,
   active,
   setScreen,
-}: SidebarItemProps) {
+  badge,
+}: SidebarIconProps) {
   return (
-    <button
-      onClick={() => setScreen(id)}
-      className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${active ? "bg-blue-50 text-blue-700 font-medium" : "text-gray-600 hover:bg-gray-100/50 hover:text-gray-900"}`}
-    >
-      <Icon size={18} className={active ? "text-blue-600" : "text-gray-500"} />
-      <span className="flex-1 text-left text-sm">{label}</span>
-      {badge && (
-        <Badge
-          variant="destructive"
-          className="h-5 px-1.5 min-w-5 flex items-center justify-center text-[10px] rounded-full"
-        >
+    <div className="relative group">
+      <button
+        onClick={() => setScreen(id)}
+        className={`
+          w-11 h-11 flex items-center justify-center rounded-xl transition-all duration-200
+          ${
+            active
+              ? "bg-blue-600 text-white shadow-lg shadow-blue-600/25"
+              : "text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+          }
+        `}
+        aria-label={label}
+      >
+        <Icon size={20} strokeWidth={active ? 2.2 : 1.8} />
+      </button>
+      {badge !== undefined && badge > 0 && (
+        <span className="absolute -top-1 -right-1 w-4.5 h-4.5 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center ring-2 ring-white">
           {badge}
-        </Badge>
+        </span>
       )}
-    </button>
+      {/* Tooltip */}
+      <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-2.5 py-1.5 bg-gray-900 text-white text-xs font-medium rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 whitespace-nowrap z-50 pointer-events-none shadow-lg">
+        {label}
+        <div className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-gray-900" />
+      </div>
+    </div>
   );
 }
 
@@ -72,109 +82,102 @@ export function Sidebar({ screen, setScreen }: SidebarProps) {
   };
 
   return (
-    <div className="w-64 border-r border-gray-200 bg-gray-50/50 flex flex-col p-5 shrink-0 h-full overflow-y-auto">
-      <div className="pl-1 mb-8 flex items-center gap-2">
-        <PropLogo size={26} />
-        <span
-          className="font-bold text-gray-900 tracking-tight"
-          style={{ fontSize: 22 }}
-        >
-          PropStack
-        </span>
+    <div className="w-[72px] bg-white border-r border-gray-200/80 flex flex-col items-center py-5 shrink-0 h-full">
+      {/* Logo */}
+      <div className="mb-8">
+        <PropLogo size={30} />
       </div>
 
-      <div className="space-y-6 flex-1">
-        <div>
-          <p className="text-[11px] font-semibold text-gray-400 tracking-wider uppercase mb-3 pl-3">
-            Main
-          </p>
-          <div className="space-y-1">
-            <SidebarItem
-              active={screen === "dashboard"}
-              id="dashboard"
-              label="Dashboard"
-              icon={LayoutDashboard}
-              setScreen={setScreen}
-            />
-            <SidebarItem
-              active={screen === "agents"}
-              id="agents"
-              label="AI Agents"
-              icon={Sparkles}
-              badge="1"
-              setScreen={setScreen}
-            />
-            <SidebarItem
-              active={screen === "chat"}
-              id="chat"
-              label="Ask Sara"
-              icon={MessageSquare}
-              setScreen={setScreen}
-            />
-            <SidebarItem
-              active={screen === "tickets"}
-              id="tickets"
-              label="Maintenance"
-              icon={Wrench}
-              badge="2"
-              setScreen={setScreen}
-            />
+      {/* Main Navigation */}
+      <nav className="flex flex-col items-center gap-2 flex-1">
+        <SidebarIcon
+          id="dashboard"
+          icon={LayoutDashboard}
+          label="Dashboard"
+          active={screen === "dashboard"}
+          setScreen={setScreen}
+        />
+        <SidebarIcon
+          id="agents"
+          icon={Sparkles}
+          label="AI Agents"
+          active={screen === "agents"}
+          setScreen={setScreen}
+          badge={1}
+        />
+        <SidebarIcon
+          id="chat"
+          icon={MessageSquare}
+          label="Ask Sara"
+          active={screen === "chat"}
+          setScreen={setScreen}
+        />
+        <SidebarIcon
+          id="properties"
+          icon={Building2}
+          label="Properties"
+          active={screen === "properties"}
+          setScreen={setScreen}
+        />
+        <SidebarIcon
+          id="tickets"
+          icon={Wrench}
+          label="Maintenance"
+          active={screen === "tickets"}
+          setScreen={setScreen}
+          badge={2}
+        />
+        <SidebarIcon
+          id="documents"
+          icon={FileText}
+          label="Documents"
+          active={screen === "documents"}
+          setScreen={setScreen}
+        />
+
+        {/* Divider */}
+        <div className="w-8 h-px bg-gray-200 my-3" />
+
+        <SidebarIcon
+          id="settings"
+          icon={Settings}
+          label="Settings"
+          active={screen === "settings"}
+          setScreen={setScreen}
+        />
+        <SidebarIcon
+          id="help"
+          icon={HelpCircle}
+          label="Help"
+          active={screen === "help"}
+          setScreen={setScreen}
+        />
+      </nav>
+
+      {/* Bottom: Logout + Avatar */}
+      <div className="flex flex-col items-center gap-3 mt-4">
+        <div className="relative group">
+          <button
+            onClick={handleLogout}
+            disabled={isLoggingOut}
+            className="w-11 h-11 flex items-center justify-center rounded-xl text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all duration-200 disabled:opacity-50"
+            aria-label="Logout"
+          >
+            {isLoggingOut ? (
+              <Loader2 size={20} className="animate-spin" />
+            ) : (
+              <LogOut size={20} strokeWidth={1.8} />
+            )}
+          </button>
+          <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-2.5 py-1.5 bg-gray-900 text-white text-xs font-medium rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 whitespace-nowrap z-50 pointer-events-none shadow-lg">
+            {isLoggingOut ? "Logging out..." : "Logout"}
+            <div className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-gray-900" />
           </div>
         </div>
 
-        <div>
-          <p className="text-[11px] font-semibold text-gray-400 tracking-wider uppercase mb-3 pl-3">
-            More
-          </p>
-          <div className="space-y-1">
-            <SidebarItem
-              active={screen === "properties"}
-              id="properties"
-              label="Properties"
-              icon={Building2}
-              setScreen={setScreen}
-            />
-            <SidebarItem
-              active={screen === "documents"}
-              id="documents"
-              label="Documents"
-              icon={FileText}
-              setScreen={setScreen}
-            />
-          </div>
-        </div>
-      </div>
-
-      <Separator className="my-4" />
-
-      <button
-        onClick={handleLogout}
-        disabled={isLoggingOut}
-        className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-red-600 hover:bg-red-50 transition-colors mb-4 disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {isLoggingOut ? (
-          <Loader2 size={18} className="animate-spin" />
-        ) : (
-          <LogOut size={18} />
-        )}
-        <span className="text-sm font-medium">
-          {isLoggingOut ? "Logging out..." : "Logout"}
-        </span>
-      </button>
-
-      <div className="bg-white rounded-xl p-3 border border-gray-200 shadow-sm flex items-center gap-3">
-        <Avatar className="h-9 w-9 border border-blue-100">
-          <AvatarFallback className="bg-blue-600 text-white font-bold text-xs">
-            VN
-          </AvatarFallback>
-        </Avatar>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-bold text-gray-900 truncate">
-            Vikram Nair
-          </p>
-          <p className="text-[11px] text-gray-500 truncate">
-            2 properties · 12 units
-          </p>
+        {/* User Avatar */}
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-md cursor-pointer hover:shadow-lg transition-shadow">
+          AK
         </div>
       </div>
     </div>

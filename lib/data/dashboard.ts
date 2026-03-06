@@ -7,7 +7,7 @@ export const mockTickets = [
     severity: "high",
     status: "open",
     time: "2h ago",
-    emoji: "🔧",
+    iconType: "wrench",
   },
   {
     id: "T-002",
@@ -17,7 +17,7 @@ export const mockTickets = [
     severity: "medium",
     status: "in_progress",
     time: "1d ago",
-    emoji: "❄️",
+    iconType: "snowflake",
   },
   {
     id: "T-003",
@@ -27,7 +27,7 @@ export const mockTickets = [
     severity: "low",
     status: "resolved",
     time: "3d ago",
-    emoji: "💡",
+    iconType: "lightbulb",
   },
   {
     id: "T-004",
@@ -37,7 +37,7 @@ export const mockTickets = [
     severity: "high",
     status: "open",
     time: "4h ago",
-    emoji: "🔐",
+    iconType: "lock",
   },
 ];
 

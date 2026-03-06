@@ -37,6 +37,7 @@ export function ChatSection() {
   >(null);
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [sidebarRefreshKey, setSidebarRefreshKey] = useState(0);
 
   // Create conversation when starting new chat
   const createNewConversation = useCallback(async () => {
@@ -127,6 +128,7 @@ export function ChatSection() {
     const newId = await createNewConversation();
     if (newId) {
       setActiveConversationId(newId);
+      setSidebarRefreshKey((k) => k + 1);
     }
   }, [setMessages, createNewConversation]);
 
@@ -155,6 +157,7 @@ export function ChatSection() {
         activeConversationId={activeConversationId}
         onSelect={handleSelectConversation}
         onNew={handleNewChat}
+        refreshKey={sidebarRefreshKey}
       />
 
       {/* Main Chat Interface */}

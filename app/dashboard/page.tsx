@@ -26,17 +26,22 @@ export default function App() {
   };
 
   return (
-    <main className="h-screen w-full bg-white font-sans overflow-hidden">
+    <main className="h-screen w-full bg-[#f5f6fa] font-sans overflow-hidden">
       <div className="flex w-full h-full">
         <Sidebar screen={screen} setScreen={setScreen} />
         {screen === 'dashboard' && <DashboardSection setScreen={setScreen} />}
         {screen === 'agents' && <AgentsSection />}
-        {screen === 'chat' && <ChatSection />}
         {screen === 'tickets' && <TicketsSection />}
         {screen === 'properties' && <PropertiesSection onViewTenant={handleViewTenant} />}
         {screen === 'tenant-detail' && selectedTenant && (
           <TenantDetailPage tenant={selectedTenant} onBack={handleBackFromTenant} />
         )}
+
+        {/* ChatSection is ALWAYS mounted but hidden when not active.
+            This preserves conversation state across tab switches. */}
+        <div className={screen === 'chat' ? 'flex-1 flex overflow-hidden' : 'hidden'}>
+          <ChatSection />
+        </div>
       </div>
     </main>
   );

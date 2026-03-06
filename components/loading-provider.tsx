@@ -134,3 +134,33 @@ export function SectionLoader() {
     </div>
   );
 }
+
+/**
+ * Standalone centered loader for content areas.
+ * Does NOT depend on LoadingContext — always renders when used.
+ * Use inside flex-1 containers so it fills and centers properly.
+ */
+export function ContentLoader({ message = "Loading..." }: { message?: string }) {
+  return (
+    <div className="flex-1 flex items-center justify-center min-h-[400px]">
+      <div className="flex flex-col items-center gap-4">
+        <div className="relative">
+          <div 
+            className="w-12 h-12 rounded-full flex items-center justify-center animate-pulse"
+            style={{
+              background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
+            }}
+          >
+            <Building2 size={22} strokeWidth={2} className="text-white" />
+          </div>
+          <div className="absolute inset-0 rounded-full animate-ping opacity-20"
+            style={{
+              background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
+            }}
+          />
+        </div>
+        <p className="text-sm font-medium text-gray-400">{message}</p>
+      </div>
+    </div>
+  );
+}

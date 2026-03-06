@@ -6,7 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { format, isToday, isYesterday } from 'date-fns';
 import { MessageSquarePlus, Search } from 'lucide-react';
-import { useEffect, useState, useTransition } from 'react';
+import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
 import { PropLogo } from './PropLogo';
 
 interface Conversation {
@@ -28,19 +28,22 @@ interface ChatSidebarProps {
   activeConversationId: string | null;
   onSelect: (id: string) => void;
   onNew: () => void;
+  /** Incremented when a new conversation is created — triggers a re-fetch */
+  refreshKey?: number;
 }
 
 export function ChatSidebar({
   activeConversationId,
   onSelect,
   onNew,
+  refreshKey = 0,
 }: ChatSidebarProps) {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [search, setSearch] = useState('');
   const [isPending, startTransition] = useTransition();
+  const hasFetched = useRef(false);
 
-  // Fetch conversations on mount + after new chat created
-  const refresh = () => {
+  const fetchConversations = useCallback(() => {
     startTransition(async () => {
       try {
         const res = await fetch('/api/conversations');
@@ -49,11 +52,22 @@ export function ChatSidebar({
         // silently ignore network errors
       }
     });
-  };
+  }, []);
 
+  // Fetch on initial mount only
   useEffect(() => {
-    refresh();
-  }, [activeConversationId]); // re-fetch when active conversation changes (new chat gets added)
+    if (!hasFetched.current) {
+      hasFetched.current = true;
+      fetchConversations();
+    }
+  }, [fetchConversations]);
+
+  // Re-fetch when refreshKey changes (new conversation was created)
+  useEffect(() => {
+    if (refreshKey > 0) {
+      fetchConversations();
+    }
+  }, [refreshKey, fetchConversations]);
 
   const filtered = conversations.filter((c) =>
     (c.title ?? 'New conversation')
