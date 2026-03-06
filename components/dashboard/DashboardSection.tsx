@@ -36,7 +36,7 @@ import {
   mockCalls,
   chatHistories,
   initChat,
-} from './data';
+} from '@/lib/data/dashboard';
 import {
   getSeverityBadge,
   getStatusBadge,
@@ -44,7 +44,7 @@ import {
   getOutcomeBadge,
   getOutcomeLabel,
   getSentimentIcon,
-} from './utils';
+} from '@/lib/utils/dashboard';
 import { PropLogo } from './PropLogo';
 
 export function DashboardSection({

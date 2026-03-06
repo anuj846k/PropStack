@@ -2,50 +2,12 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  ArrowUpRight,
-  Building2,
-  FileText,
-  LayoutDashboard,
-  MapPin,
-  MessageSquare,
-  Phone,
-  Sparkles,
-  Users,
-  Wrench,
-} from "lucide-react";
-import { ElementType, useState, useRef, useEffect } from "react";
-
-import {
-  mockTickets,
-  mockTenants,
-  mockCalls,
-  chatHistories,
-  initChat,
-} from './data';
-import {
-  getSeverityBadge,
-  getStatusBadge,
-  getStatusLabel,
-  getOutcomeBadge,
-  getOutcomeLabel,
-  getSentimentIcon,
-} from './utils';
-import { PropLogo } from './PropLogo';
+import { mockTickets } from "@/lib/data/dashboard";
+import { useState } from "react";
+import { getStatusBadge, getStatusLabel } from "@/lib/utils/dashboard";
 
 export function TicketsSection() {
   const [filter, setFilter] = useState("all");

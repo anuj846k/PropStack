@@ -1,35 +1,35 @@
-"use client";
+'use client';
 
 import {
   Conversation,
   ConversationContent,
   ConversationScrollButton,
-} from "@/components/ai-elements/conversation";
+} from '@/components/ai-elements/conversation';
 import {
   Message,
   MessageContent,
   MessageResponse,
-} from "@/components/ai-elements/message";
-import { Avatar } from "@/components/ui/avatar";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Building2 } from "lucide-react";
-import { memo } from "react";
+} from '@/components/ai-elements/message';
+import { Avatar } from '@/components/ui/avatar';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Building2 } from 'lucide-react';
+import { memo } from 'react';
 
 export type ChatMessageType = {
   id: string;
-  role: string;
+  role: 'user' | 'assistant' | 'system';
   parts?: Array<{ type: string; text?: string }>;
 };
 
 function getMessageText(message: ChatMessageType): string {
-  if (!message.parts?.length) return "";
+  if (!message.parts?.length) return '';
   return message.parts
     .filter(
       (p): p is { type: string; text: string } =>
-        p.type === "text" && typeof p.text === "string",
+        p.type === 'text' && typeof p.text === 'string',
     )
     .map((p) => p.text)
-    .join("");
+    .join('');
 }
 
 const ChatMessage = memo(function ChatMessage({
@@ -38,29 +38,29 @@ const ChatMessage = memo(function ChatMessage({
   message: ChatMessageType;
 }) {
   const text = getMessageText(message);
-  const isUser = message.role === "user";
+  const isUser = message.role === 'user';
   return (
     <div
-      className={`flex items-start gap-3 ${isUser ? "flex-row-reverse" : ""}`}
+      className={`flex items-start gap-3 ${isUser ? 'flex-row-reverse' : ''}`}
     >
       <Avatar
         className={`h-9 w-9 shrink-0 flex items-center justify-center rounded-xl shadow-sm ${
           isUser
-            ? "rounded-full border border-slate-200 text-blue-600 font-bold text-xs"
-            : "bg-blue-600   text-white"
+            ? 'rounded-full border border-slate-200 text-blue-600 font-bold text-xs'
+            : 'bg-blue-600   text-white'
         }`}
       >
-        {isUser ? "U" : <Building2 size={14} />}
+        {isUser ? 'U' : <Building2 size={14} />}
       </Avatar>
       <Message
-        from={message.role as "user" | "assistant"}
-        className={isUser ? "max-w-[72%]" : "max-w-full"}
+        from={message.role as 'user' | 'assistant'}
+        className={isUser ? 'max-w-[72%]' : 'max-w-full'}
       >
         <MessageContent
           className={
             isUser
-              ? "rounded-2xl rounded-tr-sm !bg-white border border-slate-200 px-4 py-3 text-slate-900 shadow-sm backdrop-blur [&_code]:bg-slate-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded"
-              : "rounded-none !bg-transparent border-0 shadow-none px-0 py-0 backdrop-blur-0 text-slate-900 [&_code]:bg-slate-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded"
+              ? 'rounded-2xl rounded-tr-sm !bg-white border border-slate-200 px-4 py-3 text-slate-900 shadow-sm backdrop-blur [&_code]:bg-slate-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded'
+              : 'rounded-none !bg-transparent border-0 shadow-none px-0 py-0 backdrop-blur-0 text-slate-900 [&_code]:bg-slate-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded'
           }
         >
           <MessageResponse className="text-[15px] leading-relaxed tracking-[0.01em] [&_ul]:my-2 [&_li]:my-0.5">
@@ -127,4 +127,3 @@ export function ChatConversation({
     </Conversation>
   );
 }
-
