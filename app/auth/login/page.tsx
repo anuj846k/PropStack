@@ -3,15 +3,16 @@
 import OneTapComponent from '@/components/auth/OneTapComponent';
 import { PropLogo } from '@/components/dashboard/PropLogo';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  TextureCardStyled,
+  TextureCardContent,
+  TextureCardDescription,
+  TextureCardHeader,
+  TextureCardTitle,
+  TextureSeparator,
+} from '@/components/ui/texture-card';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -74,22 +75,22 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-svh items-center justify-center bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-100 p-6">
-      <Card className="relative w-full max-w-md border-gray-200/80 shadow-xl shadow-gray-200/50 backdrop-blur-sm">
-        <CardHeader className="items-center space-y-4 pb-2 pt-8">
+      <TextureCardStyled className="relative w-full max-w-md border-gray-200/80 shadow-xl shadow-gray-200/50 backdrop-blur-sm">
+        <TextureCardHeader className="items-center space-y-4 pb-2 pt-8">
           <div className="flex items-center justify-center">
             <PropLogo size={32} />
           </div>
           <div className="space-y-1.5 text-center">
-            <CardTitle className="text-2xl font-bold tracking-tight text-gray-900">
+            <TextureCardTitle className="text-2xl font-bold tracking-tight text-gray-900">
               Welcome back
-            </CardTitle>
-            <CardDescription className="text-sm text-gray-500">
+            </TextureCardTitle>
+            <TextureCardDescription className="text-sm text-gray-500">
               Sign in to manage your properties
-            </CardDescription>
+            </TextureCardDescription>
           </div>
-        </CardHeader>
+        </TextureCardHeader>
 
-        <CardContent className="px-8 pb-8 pt-4">
+        <TextureCardContent className="px-8 pb-8 pt-4">
           <Button
             onClick={handleGoogleSignIn}
             variant="outline"
@@ -100,9 +101,7 @@ export default function LoginPage() {
           </Button>
 
           <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-gray-200" />
-            </div>
+            <TextureSeparator />
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-white px-3 text-gray-400">or</span>
             </div>
@@ -178,8 +177,8 @@ export default function LoginPage() {
               Privacy Policy
             </a>
           </p>
-        </CardContent>
-      </Card>
+        </TextureCardContent>
+      </TextureCardStyled>
 
       <OneTapComponent />
     </div>

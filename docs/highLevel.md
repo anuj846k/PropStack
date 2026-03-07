@@ -115,22 +115,6 @@ So your tech integration path is: ZoopSign or similar for e-stamp + Aadhaar eSig
 
 
 
-Tech stack : 
-Next js + Node js ( primary backend) + Fast api (AI layer backend)
-
-┌─────────────────┐         ┌──────────────────┐         ┌─────────────────┐
-│                 │         │                  │         │                 │
-│   Next.js       │ ──────► │  Node.js/TS      │ ──────► │  FastAPI/Python │
-│   Frontend      │         │  Backend         │         │  AI Service     │
-│                 │         │  (Sprint 1)      │         │  (Sprint 2)     │
-└─────────────────┘         └──────────────────┘         └─────────────────┘
-                                     │                            │
-                                     ▼                            ▼
-                               PostgreSQL                   Gemini Live API
-                               Supabase                     ADK
-                              Auth/Storage                 Sarvam AI
-
-
 
 
 How it works in practice:

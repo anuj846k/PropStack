@@ -23,11 +23,13 @@
     "date-fns": "^4.1.0",
     "google-one-tap": "^1.0.6",
     "lucide-react": "^0.564.0",
+    "motion": "^12.35.1",
     "nanoid": "^5.1.6",
     "next": "16.1.6",
     "radix-ui": "^1.4.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-use-measure": "^2.1.7",
     "streamdown": "^2.3.0",
     "tailwind-merge": "^3.4.0",
     "use-stick-to-bottom": "^1.1.3"
