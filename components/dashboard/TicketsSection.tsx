@@ -7,15 +7,10 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getStatusBadge, getStatusLabel } from "@/lib/utils/dashboard";
-import {
-  Wrench,
-  Snowflake,
-  Lightbulb,
-  Lock,
-  ImageIcon,
-} from "lucide-react";
+import { Wrench, Snowflake, Lightbulb, Lock, ImageIcon } from "lucide-react";
 import type { MaintenanceTicket } from "@/lib/api";
 import { TicketImageLightbox } from "./TicketImageLightbox";
+import { Skeleton } from "../ui/skeleton";
 
 const ticketIconMap: Record<string, ElementType> = {
   plumbing: Wrench,
@@ -94,8 +89,8 @@ export function TicketsSection() {
   const filteredTickets = useMemo(() => tickets, [tickets]);
 
   return (
-    <div className="flex-1 flex overflow-hidden">
-      <ScrollArea className="flex-1">
+    <div className="flex h-full min-h-0 flex-1 overflow-hidden">
+      <ScrollArea className="h-full min-h-0 flex-1">
         <div className="p-8 max-w-5xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <div>
@@ -106,7 +101,10 @@ export function TicketsSection() {
                 View AI-triaged tickets and vendor dispatch status.
               </p>
             </div>
-            <Button className="font-semibold shadow-sm rounded-xl px-5" disabled>
+            <Button
+              className="font-semibold shadow-sm rounded-xl px-5"
+              disabled
+            >
               New Ticket
             </Button>
           </div>
@@ -117,16 +115,55 @@ export function TicketsSection() {
             value={statusFilter}
             onValueChange={setStatusFilter}
           >
-            <TabsList>
-              <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="open">Open</TabsTrigger>
-              <TabsTrigger value="in_progress">In Progress</TabsTrigger>
-              <TabsTrigger value="resolved">Resolved</TabsTrigger>
+            <TabsList className="bg-gray-100">
+              <TabsTrigger
+                value="all"
+                className="data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm"
+              >
+                All
+              </TabsTrigger>
+              <TabsTrigger
+                value="open"
+                className="data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm"
+              >
+                Open
+              </TabsTrigger>
+              <TabsTrigger
+                value="in_progress"
+                className="data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm"
+              >
+                In Progress
+              </TabsTrigger>
+              <TabsTrigger
+                value="resolved"
+                className="data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm"
+              >
+                Resolved
+              </TabsTrigger>
             </TabsList>
           </Tabs>
 
           {loading && (
-            <p className="text-sm text-gray-500">Loading tickets…</p>
+            <div className="grid gap-4">
+              {[1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-start gap-5"
+                >
+                  <Skeleton className="w-14 h-14 rounded-2xl" />
+                  <div className="flex-1 min-w-0 space-y-1.5">
+                    <Skeleton className="h-5 w-3/4" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-3 w-1/2" />
+                    <Skeleton className="h-3 w-2/3" />
+                  </div>
+                  <div className="flex flex-col items-end gap-2 shrink-0">
+                    <Skeleton className="h-5 w-20 rounded-full" />
+                    <Skeleton className="h-3 w-16" />
+                  </div>
+                </div>
+              ))}
+            </div>
           )}
           {error && (
             <p className="text-sm text-red-500">
@@ -173,17 +210,32 @@ export function TicketsSection() {
                         {t.unit?.unit_number
                           ? `Unit ${t.unit.unit_number}`
                           : "Unassigned unit"}
-                        {t.tenant?.name
-                          ? ` · ${t.tenant.name}`
-                          : ""}
+                        {t.tenant?.name ? ` · ${t.tenant.name}` : ""}
                         {t.unit?.property_name
                           ? ` · ${t.unit.property_name}`
                           : ""}
                       </p>
-                      <p className="text-xs text-gray-400">
-                        {t.latest_dispatch_status
-                          ? `Vendor dispatch: ${t.latest_dispatch_status}`
-                          : "No vendor dispatch yet"}
+                      <p
+                        className={
+                          [
+                            "text-xs font-semibold tracking-wider uppercase",
+                            t.latest_dispatch_status === "completed"
+                              ? "text-emerald-500"
+                              : t.latest_dispatch_status === "no_answer"
+                                ? "text-red-500"
+                                : "text-gray-400"
+                          ].join(" ")
+                        }
+                      >
+                        {t.latest_dispatch_status === "dispatched"
+                          ? `${t.latest_dispatch_status.replace("_", " ")}`
+                          : t.latest_dispatch_status === "in_progress"
+                            ? "Vendor dispatched"
+                            : t.latest_dispatch_status === "completed"
+                              ? "Vendor completed"
+                              : t.latest_dispatch_status === "no_answer"
+                                ? "Vendor no answer"
+                                : "No vendor dispatch yet"}
                       </p>
                     </div>
                     <div className="flex flex-col items-end gap-2 shrink-0">

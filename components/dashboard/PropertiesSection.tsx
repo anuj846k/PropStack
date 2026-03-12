@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { getProperties, getPropertyUnits, type Property, type Unit, type Tenant } from "@/lib/api";
 import { useLoading, ContentLoader } from "@/components/loading-provider";
+import { Skeleton } from "../ui/skeleton";
 
 interface PropertyWithUnits extends Property {
   units?: Unit[];
@@ -131,8 +132,9 @@ function PropertiesSectionContent({ onViewTenant }: PropertiesSectionProps) {
   const vacantUnits = properties.reduce((sum, p) => sum + p.vacant_units, 0);
 
   return (
-    <ScrollArea className="flex-1">
-      <div className="p-8 max-w-6xl mx-auto">
+    <div className="flex h-full min-h-0 flex-1 overflow-hidden">
+      <ScrollArea className="h-full min-h-0 flex-1">
+        <div className="p-8 max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
@@ -224,7 +226,11 @@ function PropertiesSectionContent({ onViewTenant }: PropertiesSectionProps) {
               {expandedProperty === property.id && (
                 <div className="border-t border-gray-100 bg-gray-50/50 p-5">
                   {loadingUnits[property.id] ? (
-                    <p className="text-sm text-gray-500">Loading units...</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {[1, 2, 3].map((i) => (
+                        <Skeleton key={i} className="w-full h-20 rounded-2xl" />
+                      ))}
+                    </div>
                   ) : propertyUnits[property.id]?.length === 0 ? (
                     <p className="text-sm text-gray-500">No units in this property</p>
                   ) : (
@@ -289,8 +295,9 @@ function PropertiesSectionContent({ onViewTenant }: PropertiesSectionProps) {
             </div>
           ))}
         </div>
-      </div>
-    </ScrollArea>
+        </div>
+      </ScrollArea>
+    </div>
   );
 }
 

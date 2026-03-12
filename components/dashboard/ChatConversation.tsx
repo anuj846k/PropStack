@@ -12,7 +12,7 @@ import {
 } from '@/components/ai-elements/message';
 import { Avatar } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Building2 } from 'lucide-react';
+import { Building2, Hammer } from 'lucide-react';
 import { memo } from 'react';
 
 export type ChatMessageType = {
@@ -44,26 +44,26 @@ const ChatMessage = memo(function ChatMessage({
       className={`flex items-start gap-3 ${isUser ? 'flex-row-reverse' : ''}`}
     >
       <Avatar
-        className={`h-9 w-9 shrink-0 flex items-center justify-center rounded-xl shadow-sm ${
+        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl shadow-sm ${
           isUser
-            ? 'rounded-full border border-slate-200 text-blue-600 font-bold text-xs'
-            : 'bg-blue-600   text-white'
+            ? 'rounded-full border border-[#cfe0f4] bg-white text-[#2f5b88] font-bold text-xs'
+            : 'bg-[#2f5b88] text-white'
         }`}
       >
         {isUser ? 'U' : <Building2 size={14} />}
       </Avatar>
       <Message
         from={message.role as 'user' | 'assistant'}
-        className={isUser ? 'max-w-[72%]' : 'max-w-full'}
+        className={isUser ? 'max-w-[72%]' : 'max-w-[80%]'}
       >
         <MessageContent
           className={
             isUser
-              ? 'rounded-2xl rounded-tr-sm !bg-white border border-slate-200 px-4 py-3 text-slate-900 shadow-sm backdrop-blur [&_code]:bg-slate-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded'
-              : 'rounded-none !bg-transparent border-0 shadow-none px-0 py-0 backdrop-blur-0 text-slate-900 [&_code]:bg-slate-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded'
+              ? 'rounded-2xl rounded-tr-sm border border-[#d3e3f6] !bg-white px-4 py-3 text-[#1f2d40] shadow-sm [&_code]:rounded [&_code]:bg-slate-100 [&_code]:px-1.5 [&_code]:py-0.5'
+              : 'rounded-2xl rounded-tl-sm border border-[#d8e6f8] !bg-white/92 px-4 py-3 text-[#24364d] shadow-sm [&_code]:rounded [&_code]:bg-slate-100 [&_code]:px-1.5 [&_code]:py-0.5'
           }
         >
-          <MessageResponse className="text-[15px] leading-relaxed tracking-[0.01em] [&_ul]:my-2 [&_li]:my-0.5">
+          <MessageResponse className="text-[15px] leading-relaxed tracking-[0.01em] [&_li]:my-0.5 [&_ul]:my-2">
             {text}
           </MessageResponse>
         </MessageContent>
@@ -84,21 +84,42 @@ export function ChatConversation({
   endRef,
 }: ChatConversationProps) {
   return (
-    <Conversation className="flex-1 flex flex-col min-h-0 overflow-hidden">
+    <Conversation className="flex min-h-0 flex-1 flex-col overflow-hidden bg-[linear-gradient(180deg,#f7fbff_0%,#f2f8ff_100%)]">
       <ScrollArea className="flex-1 min-h-0">
-        <ConversationContent className="p-7 pb-5">
+        <ConversationContent className="px-6 py-7">
           <div className="mx-auto w-full max-w-[860px] space-y-7">
             {messages.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-center rounded-2xl border border-blue-100/80 bg-white/60 backdrop-blur-sm">
-                <Avatar className="h-12 w-12 bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center rounded-xl mb-3">
-                  <Building2 size={24} />
-                </Avatar>
-                <p className="text-sm font-semibold text-slate-900">
-                  Good morning. I&apos;m Sara — your AI property manager.
-                </p>
-                <p className="text-xs text-slate-500 mt-1">
-                  Ask about rent status, maintenance, or tenants.
-                </p>
+              <div className="rounded-[24px] border border-[#d7e4f4] bg-white/88 p-7 shadow-[0_12px_32px_rgba(35,76,130,0.1)] backdrop-blur-sm">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="flex items-start gap-3">
+                    <Avatar className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#2f5b88] to-[#4475aa] text-white">
+                      <Building2 size={24} />
+                    </Avatar>
+                    <div>
+                      <p className="text-[15px] font-semibold text-[#1f2d40]">
+                        Good morning. I&apos;m Sara — your AI property manager.
+                      </p>
+                      <p className="mt-1 text-[12px] text-[#6d829c]">
+                        Ask about rent status, maintenance, or tenants.
+                      </p>
+                    </div>
+                  </div>
+                  <span className="inline-flex items-center rounded-full border border-[#cfe0f5] bg-[#eef5ff] px-2.5 py-1 text-[10px] font-semibold tracking-wide text-[#33567f] uppercase">
+                    Ready
+                  </span>
+                </div>
+
+                <div className="mt-5 grid gap-2 sm:grid-cols-3">
+                  <div className="rounded-xl border border-[#e1ecfa] bg-[#f8fbff] px-3 py-2 text-[12px] font-medium text-[#365071]">
+                    Who is overdue this week?
+                  </div>
+                  <div className="rounded-xl border border-[#e1ecfa] bg-[#f8fbff] px-3 py-2 text-[12px] font-medium text-[#365071]">
+                    Show open maintenance tickets
+                  </div>
+                  <div className="rounded-xl border border-[#e1ecfa] bg-[#f8fbff] px-3 py-2 text-[12px] font-medium text-[#365071]">
+                    Find tenant contact details
+                  </div>
+                </div>
               </div>
             ) : (
               <div className="space-y-5">
@@ -108,14 +129,22 @@ export function ChatConversation({
               </div>
             )}
             {isGenerating && (
-              <div className="flex gap-3">
-                <Avatar className="h-9 w-9 shrink-0 bg-slate-900 text-blue-100 flex items-center justify-center rounded-xl">
-                  <Building2 size={14} />
-                </Avatar>
-                <div className="bg-white/90 border border-slate-200 px-4 py-3 rounded-2xl rounded-tl-sm shadow-sm flex items-center gap-2 backdrop-blur">
-                  <span className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" />
-                  <span className="w-2 h-2 bg-blue-500 rounded-full animate-bounce [animation-delay:75ms]" />
-                  <span className="w-2 h-2 bg-blue-500 rounded-full animate-bounce [animation-delay:150ms]" />
+              <div className="flex flex-col gap-2">
+                <div className="flex gap-3">
+                  <Avatar className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#2f5b88] text-white">
+                    <Building2 size={14} />
+                  </Avatar>
+                  <div className="flex items-center gap-2 rounded-2xl rounded-tl-sm border border-[#d8e6f8] bg-white/90 px-4 py-3 shadow-sm backdrop-blur">
+                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#3d6fb4]" />
+                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#3d6fb4] [animation-delay:75ms]" />
+                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#3d6fb4] [animation-delay:150ms]" />
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 pl-12 text-[11px] font-medium text-[#4b6380]">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[#e5effb] px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-[#36527a]">
+                    <Hammer className="h-3 w-3" />
+                    <span>Calling tools…</span>
+                  </span>
                 </div>
               </div>
             )}

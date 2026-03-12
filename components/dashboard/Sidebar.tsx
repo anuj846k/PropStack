@@ -1,185 +1,193 @@
 "use client";
 
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { createClient } from "@/lib/supabase/client";
 import {
+  Bot,
   Building2,
-  FileText,
-  HelpCircle,
   LayoutDashboard,
-  Loader2,
   LogOut,
   MessageSquare,
-  Settings,
   Sparkles,
   Wrench,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { ElementType, useState } from "react";
-
-import { PropLogo } from "./PropLogo";
-
-interface SidebarIconProps {
-  id: string;
-  icon: ElementType;
-  label: string;
-  active: boolean;
-  setScreen: (id: string) => void;
-  badge?: number;
-}
-
-function SidebarIcon({
-  id,
-  icon: Icon,
-  label,
-  active,
-  setScreen,
-  badge,
-}: SidebarIconProps) {
-  return (
-    <div className="relative group">
-      <button
-        onClick={() => setScreen(id)}
-        className={`
-          w-11 h-11 flex items-center justify-center rounded-xl transition-all duration-200
-          ${
-            active
-              ? "bg-blue-600 text-white shadow-lg shadow-blue-600/25"
-              : "text-gray-400 hover:bg-gray-100 hover:text-gray-600"
-          }
-        `}
-        aria-label={label}
-      >
-        <Icon size={20} strokeWidth={active ? 2.2 : 1.8} />
-      </button>
-      {badge !== undefined && badge > 0 && (
-        <span className="absolute -top-1 -right-1 w-4.5 h-4.5 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center ring-2 ring-white">
-          {badge}
-        </span>
-      )}
-      {/* Tooltip */}
-      <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-2.5 py-1.5 bg-gray-900 text-white text-xs font-medium rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 whitespace-nowrap z-50 pointer-events-none shadow-lg">
-        {label}
-        <div className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-gray-900" />
-      </div>
-    </div>
-  );
-}
+import { useEffect, useState } from "react";
 
 interface SidebarProps {
   screen: string;
   setScreen: (id: string) => void;
+  badge?: {
+    agents?: number;
+    tickets?: number;
+  };
 }
 
-export function Sidebar({ screen, setScreen }: SidebarProps) {
+interface UserData {
+  id: string;
+  email?: string;
+  role?: string;
+  name?: string;
+}
+
+const navItems = [
+  { id: "dashboard", icon: LayoutDashboard, label: "Dashboard" },
+  { id: "chat", icon: MessageSquare, label: "Ask Sara" },
+  { id: "properties", icon: Building2, label: "Properties" },
+  { id: "tickets", icon: Wrench, label: "Maintenance" },
+  { id: "agents", icon: Bot, label: "AI Agents" },
+] as const;
+
+export default function DashboardSidebar({
+  screen,
+  setScreen,
+  badge,
+}: SidebarProps) {
   const supabase = createClient();
   const router = useRouter();
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [user, setUser] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const handleLogout = async () => {
-    setIsLoggingOut(true);
+  useEffect(() => {
+    async function getUser() {
+      const {
+        data: { user: sbUser },
+      } = await supabase.auth.getUser();
+      if (sbUser) {
+        const { data: profile } = await supabase
+          .from("users")
+          .select("*")
+          .eq("id", sbUser.id)
+          .single();
+
+        setUser({
+          id: sbUser.id,
+          email: sbUser.email,
+          ...profile,
+        });
+      }
+      setLoading(false);
+    }
+    getUser();
+  }, [supabase]);
+
+  const initials =
+    user?.name
+      ?.split(" ")
+      .map((n) => n[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase() ?? "?";
+
+  async function handleLogout() {
     await supabase.auth.signOut();
-    router.push("/auth/login");
-  };
+    router.replace("/auth/login");
+  }
 
   return (
-    <div className="w-[72px] bg-white border-r border-gray-200/80 flex flex-col items-center py-5 shrink-0 h-full">
-      {/* Logo */}
-      <div className="mb-8">
-        <PropLogo size={30} />
-      </div>
+    <aside className="w-full shrink-0 px-3 pt-3 pb-2 md:h-full md:min-h-0 md:w-[92px] md:self-stretch md:overflow-y-auto md:overflow-x-hidden md:px-4 md:py-8">
+      <div className="flex w-full items-center justify-between md:min-h-full md:flex-col md:items-center md:justify-start md:gap-8">
+        <button
+          className="flex h-12 w-12 items-center justify-center rounded-xl border border-[#d4e1f3] bg-white text-[#1f385c] shadow-sm transition-colors hover:bg-[#f2f7ff] md:h-14 md:w-14"
+          aria-label="Home"
+          onClick={() => setScreen("dashboard")}
+        >
+          <Building2 className="h-6 w-6 md:h-7 md:w-7" />
+        </button>
 
-      {/* Main Navigation */}
-      <nav className="flex flex-col items-center gap-2 flex-1">
-        <SidebarIcon
-          id="dashboard"
-          icon={LayoutDashboard}
-          label="Dashboard"
-          active={screen === "dashboard"}
-          setScreen={setScreen}
-        />
-        <SidebarIcon
-          id="agents"
-          icon={Sparkles}
-          label="AI Agents"
-          active={screen === "agents"}
-          setScreen={setScreen}
-          badge={1}
-        />
-        <SidebarIcon
-          id="chat"
-          icon={MessageSquare}
-          label="Ask Sara"
-          active={screen === "chat"}
-          setScreen={setScreen}
-        />
-        <SidebarIcon
-          id="properties"
-          icon={Building2}
-          label="Properties"
-          active={screen === "properties"}
-          setScreen={setScreen}
-        />
-        <SidebarIcon
-          id="tickets"
-          icon={Wrench}
-          label="Maintenance"
-          active={screen === "tickets"}
-          setScreen={setScreen}
-          badge={2}
-        />
-        <SidebarIcon
-          id="documents"
-          icon={FileText}
-          label="Documents"
-          active={screen === "documents"}
-          setScreen={setScreen}
-        />
+        <div className="flex items-center gap-3 md:flex-col md:gap-8">
+          <nav className="flex items-center gap-2 overflow-x-auto rounded-full border border-[#d7e4f4] bg-white/95 p-2  md:max-h-[55vh] md:flex-col md:overflow-y-auto md:overflow-x-hidden md:rounded-[30px]">
+            {navItems.map((item) => {
+              const isActive = screen === item.id;
+              const showBadge =
+                item.id === "agents" ? badge?.agents : badge?.tickets;
 
-        {/* Divider */}
-        <div className="w-8 h-px bg-gray-200 my-3" />
+              return (
+                <div key={item.id} className="relative">
+                  <button
+                    onClick={() => setScreen(item.id)}
+                    className={`flex h-10 w-10 items-center justify-center rounded-full transition-all md:h-[46px] md:w-[46px] ${
+                      isActive
+                        ? "bg-[#3982e9] text-white shadow-[0_8px_20px_rgba(31,40,55,0.4)]"
+                        : "bg-white text-[#5f7088] hover:bg-[#edf4ff] hover:text-[#1f385c]"
+                    }`}
+                    aria-label={item.label}
+                    title={item.label}
+                  >
+                    <item.icon className="h-[18px] w-[18px] md:h-5 md:w-5" />
+                  </button>
+                  {showBadge !== undefined && showBadge > 0 && (
+                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#ff4d4f] px-1 text-[9px] font-semibold text-white ring-2 ring-white">
+                      {showBadge}
+                    </span>
+                  )}
+                </div>
+              );
+            })}
+          </nav>
 
-        <SidebarIcon
-          id="settings"
-          icon={Settings}
-          label="Settings"
-          active={screen === "settings"}
-          setScreen={setScreen}
-        />
-        <SidebarIcon
-          id="help"
-          icon={HelpCircle}
-          label="Help"
-          active={screen === "help"}
-          setScreen={setScreen}
-        />
-      </nav>
+          <div className="flex items-center gap-2 md:flex-col">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="h-10 w-10 rounded-full border border-[#d7e4f4] bg-white p-0 hover:bg-[#eef4ff] md:h-11 md:w-11"
+                  aria-label="Profile menu"
+                >
+                  <Avatar className="h-10 w-10 rounded-full md:h-11 md:w-11">
+                    <AvatarFallback className="rounded-full bg-[#dbe9ff] text-xs font-semibold text-[#33527a]">
+                      {loading ? "..." : initials}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" side="right" className="w-56">
+                <DropdownMenuLabel>
+                  <div className="flex flex-col gap-1">
+                    <span className="font-medium">{user?.name ?? "User"}</span>
+                    <span className="text-xs font-normal text-muted-foreground">
+                      {user?.email}
+                    </span>
+                    {user?.role && (
+                      <span className="text-xs font-normal text-muted-foreground">
+                        {user.role.replace("_", " ")}
+                      </span>
+                    )}
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  variant="destructive"
+                  className="cursor-pointer focus:bg-destructive/10 focus:text-destructive"
+                  onSelect={handleLogout}
+                >
+                  <LogOut className="size-4" />
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-      {/* Bottom: Logout + Avatar */}
-      <div className="flex flex-col items-center gap-3 mt-4">
-        <div className="relative group">
-          <button
-            onClick={handleLogout}
-            disabled={isLoggingOut}
-            className="w-11 h-11 flex items-center justify-center rounded-xl text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all duration-200 disabled:opacity-50"
-            aria-label="Logout"
-          >
-            {isLoggingOut ? (
-              <Loader2 size={20} className="animate-spin" />
-            ) : (
-              <LogOut size={20} strokeWidth={1.8} />
-            )}
-          </button>
-          <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-2.5 py-1.5 bg-gray-900 text-white text-xs font-medium rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 whitespace-nowrap z-50 pointer-events-none shadow-lg">
-            {isLoggingOut ? "Logging out..." : "Logout"}
-            <div className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-gray-900" />
+            <button
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-[#d7e4f4] bg-white text-[#5f7088] transition-colors hover:bg-[#eef4ff] hover:text-[#1f385c] md:h-11 md:w-11"
+              aria-label="Logout"
+              onClick={handleLogout}
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
           </div>
         </div>
-
-        {/* User Avatar */}
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-md cursor-pointer hover:shadow-lg transition-shadow">
-          AK
-        </div>
       </div>
-    </div>
+    </aside>
   );
 }

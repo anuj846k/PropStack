@@ -152,7 +152,7 @@ export function ChatSection() {
   const isGenerating = status === 'submitted' || status === 'streaming';
 
   return (
-    <div className="flex-1 flex overflow-hidden border border-slate-200 bg-slate-100/70 shadow-[0_8px_40px_-16px_rgba(15,23,42,0.28)]">
+    <div className="flex h-full min-h-0 flex-1 overflow-hidden  border border-[#d7e4f4] bg-[#f4f8ff]/85 ">
       <ChatSidebar
         activeConversationId={activeConversationId}
         onSelect={handleSelectConversation}
@@ -161,19 +161,19 @@ export function ChatSection() {
       />
 
       {/* Main Chat Interface */}
-      <div className="flex-1 flex flex-col min-w-0 min-h-0">
-        <div className="h-16 border-b border-slate-200 bg-white/95 backdrop-blur flex items-center px-6 justify-between shrink-0 shadow-sm z-10">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+        <div className="z-10 flex h-[76px] shrink-0 items-center justify-between border-b border-[#dce8f8] bg-white/75 px-6 backdrop-blur">
           <div>
-            <h2 className="text-[15px] font-semibold text-slate-900 tracking-tight">
+            <h2 className="text-[16px] font-semibold tracking-tight text-[#1f2c3f]">
               Ask Sara Anything
             </h2>
-            <p className="text-[11px] font-medium text-slate-500 mt-0.5">
+            <p className="mt-0.5 text-[11px] font-medium text-[#6a7f99]">
               Multimodal reasoning across leases, rent and repairs
             </p>
           </div>
           <Badge
             variant="outline"
-            className="h-6 gap-1.5 bg-emerald-50 text-emerald-700 border-emerald-200 text-[10px] font-bold tracking-widest uppercase"
+            className="h-7 gap-1.5 rounded-full border-[#bcdcc8] bg-[#edf9f1] px-2.5 text-[10px] font-bold tracking-widest text-[#2f7a4a] uppercase"
           >
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />{' '}
             Active

@@ -124,6 +124,43 @@ export interface MaintenanceTicket {
   latest_dispatch_status: string | null;
 }
 
+export interface VacancyUnit {
+  unit_id: string;
+  unit_number: string | null;
+  property_id: string | null;
+  property_name: string | null;
+  property_address: string | null;
+  rent_amount: number;
+  days_vacant: number;
+  vacancy_cost: number;
+}
+
+export interface VacancyCostSummary {
+  total_vacant_units: number;
+  total_days_vacant: number;
+  total_vacancy_cost: number;
+  as_of_date: string;
+  month_start: string;
+  units: VacancyUnit[];
+}
+
+export interface RentIntelUnit {
+  unit_id: string;
+  unit_number: string | null;
+  property_id: string | null;
+  property_name: string | null;
+  property_address: string | null;
+  city: string | null;
+  state: string | null;
+  rent_amount: number;
+  market_rent_estimate: number;
+  delta: number;
+  delta_pct: number;
+  is_underpriced: boolean;
+}
+
+
+
 async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
@@ -174,3 +211,8 @@ export async function getMaintenanceTickets(status?: string): Promise<Maintenanc
   const query = status ? `?status=${encodeURIComponent(status)}` : '';
   return fetchApi<MaintenanceTicket[]>(`/v1/maintenance/tickets${query}`);
 }
+
+export async function getVacancyCost(): Promise<VacancyCostSummary> {
+  return fetchApi<VacancyCostSummary>('/v1/analytics/vacancy-cost');
+}
+

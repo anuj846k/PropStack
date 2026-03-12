@@ -148,8 +148,9 @@ function TenantDetailContent({ tenant, onBack }: TenantDetailPageProps) {
   };
 
   return (
-    <ScrollArea className="flex-1 bg-gray-50/30">
-      <div className="p-8 max-w-6xl mx-auto">
+    <div className="flex h-full min-h-0 flex-1 overflow-hidden">
+      <ScrollArea className="h-full min-h-0 flex-1 bg-gray-50/30">
+        <div className="p-8 max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
           <Button variant="ghost" size="icon" onClick={onBack}>
@@ -362,16 +363,19 @@ function TenantDetailContent({ tenant, onBack }: TenantDetailPageProps) {
             </Card>
           </div>
         )}
-      </div>
-    </ScrollArea>
+        </div>
+      </ScrollArea>
+    </div>
   );
 }
 
 function TenantDetailFallback() {
   return (
-    <ScrollArea className="flex-1 bg-gray-50/30">
-      <InlineLoader size={48} />
-    </ScrollArea>
+    <div className="flex h-full min-h-0 flex-1 overflow-hidden">
+      <ScrollArea className="h-full min-h-0 flex-1 bg-gray-50/30">
+        <InlineLoader size={48} />
+      </ScrollArea>
+    </div>
   );
 }
 

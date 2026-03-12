@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { cn } from '@/lib/utils';
-import { format, isToday, isYesterday } from 'date-fns';
-import { MessageSquarePlus, Search } from 'lucide-react';
-import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
-import { PropLogo } from './PropLogo';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
+import { format, isToday, isYesterday } from "date-fns";
+import { MessageSquarePlus, Search } from "lucide-react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
+import { PropLogo } from "./PropLogo";
 
 interface Conversation {
   id: string;
@@ -17,11 +17,11 @@ interface Conversation {
 }
 
 function formatTime(dateStr: string | null): string {
-  if (!dateStr) return '';
+  if (!dateStr) return "";
   const d = new Date(dateStr);
-  if (isToday(d)) return format(d, 'h:mm a');
-  if (isYesterday(d)) return 'Yesterday';
-  return format(d, 'MMM d');
+  if (isToday(d)) return format(d, "h:mm a");
+  if (isYesterday(d)) return "Yesterday";
+  return format(d, "MMM d");
 }
 
 interface ChatSidebarProps {
@@ -39,14 +39,14 @@ export function ChatSidebar({
   refreshKey = 0,
 }: ChatSidebarProps) {
   const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [isPending, startTransition] = useTransition();
   const hasFetched = useRef(false);
 
   const fetchConversations = useCallback(() => {
     startTransition(async () => {
       try {
-        const res = await fetch('/api/conversations');
+        const res = await fetch("/api/conversations");
         if (res.ok) setConversations(await res.json());
       } catch {
         // silently ignore network errors
@@ -70,74 +70,74 @@ export function ChatSidebar({
   }, [refreshKey, fetchConversations]);
 
   const filtered = conversations.filter((c) =>
-    (c.title ?? 'New conversation')
+    (c.title ?? "New conversation")
       .toLowerCase()
       .includes(search.toLowerCase()),
   );
 
   return (
-    <div className="w-[250px] border-r border-slate-200 bg-linear-to-b from-white to-slate-50 flex flex-col">
-      <div className="p-4 border-b border-slate-200">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-bold text-slate-900">Conversations</h3>
+    <div className="flex min-h-0 w-[278px] flex-col border-r border-[#dce8f8] bg-[#ecf4ff]/90">
+      <div className="border-b border-[#dce8f8] p-4">
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="text-sm font-bold text-[#1f2c3f]">Conversations</h3>
           <Button
             size="sm"
             onClick={onNew}
             title="New conversation"
-            className="h-8 text-xs px-3 bg-slate-900 hover:bg-slate-800 text-slate-100 rounded-lg shadow-sm flex items-center gap-1.5"
+            className="flex h-8 items-center gap-1.5 rounded-full bg-[#2f5b88] px-3 text-xs text-white shadow-sm transition-colors hover:bg-[#244d77]"
           >
             <MessageSquarePlus size={13} />
             New
           </Button>
         </div>
-        <div className="relative">
+        <div className="relative rounded-full border border-[#d8e6f8] bg-white shadow-sm">
           <Search
             size={13}
-            className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8ca1bd]"
           />
           <Input
             placeholder="Search history..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="h-9 pl-8 bg-white/80 border-slate-200 text-sm shadow-sm focus-visible:ring-blue-600/20"
+            className="h-9 border-0 bg-transparent pl-9 text-sm text-[#1f2c3f] shadow-none placeholder:text-[#8ea4be] focus-visible:ring-0"
           />
         </div>
       </div>
 
-      <ScrollArea className="flex-1 p-3">
+      <ScrollArea className="flex-1 px-3 py-3">
         {isPending && conversations.length === 0 ? (
           <div className="space-y-2">
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-14 rounded-xl bg-slate-100 animate-pulse"
+                className="h-14 animate-pulse rounded-2xl border border-[#dce8f8] bg-white/80"
               />
             ))}
           </div>
         ) : filtered.length === 0 ? (
-          <p className="text-[12px] text-slate-400 text-center pt-6 px-2">
+          <p className="px-2 pt-6 text-center text-[12px] text-[#8299b5]">
             {search
-              ? 'No matches found'
-              : 'No conversations yet. Start chatting!'}
+              ? "No matches found"
+              : "No conversations yet. Start chatting!"}
           </p>
         ) : (
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             {filtered.map((conv) => (
               <button
                 key={conv.id}
                 onClick={() => onSelect(conv.id)}
                 className={cn(
-                  'w-full text-left p-3 rounded-xl border transition-all',
+                  "w-full  rounded-xl border p-2 text-left transition-all",
                   activeConversationId === conv.id
-                    ? 'bg-blue-50 border-blue-200 shadow-sm'
-                    : 'border-transparent hover:bg-white hover:border-blue-100 hover:shadow-sm cursor-pointer',
+                    ? "border-[#bfd5f4] bg-white "
+                    : "border-transparent bg-transparent hover:cursor-pointer hover:border-[#d4e3f7] hover:bg-white/85",
                 )}
               >
-                <div className="flex items-start justify-between mb-0.5 gap-1">
-                  <span className="font-semibold text-[13px] text-slate-900 truncate flex-1 leading-tight">
-                    {conv.title ?? 'New conversation'}
+                <div className="mb-0.5 flex items-start justify-between gap-1">
+                  <span className="flex-1 truncate text-[13px] leading-tight font-semibold text-[#25374f]">
+                    {conv.title ?? "New conversation"}
                   </span>
-                  <span className="text-slate-400 font-medium text-[11px] shrink-0 mt-0.5">
+                  <span className="mt-0.5 shrink-0 text-[9px] font-medium text-[#8ca1ba]">
                     {formatTime(conv.last_message_at ?? conv.created_at)}
                   </span>
                 </div>
@@ -147,13 +147,13 @@ export function ChatSidebar({
         )}
       </ScrollArea>
 
-      <div className="p-4 bg-white/80 border-t border-slate-200 flex items-center gap-3">
+      <div className="flex items-center gap-3 border-t border-[#dce8f8] bg-white/70 p-4">
         <PropLogo size={14} />
         <div>
-          <p className="text-[12px] font-bold text-slate-900 leading-tight">
+          <p className="text-[12px] leading-tight font-bold text-[#1f2c3f]">
             Sara AI
           </p>
-          <p className="text-[10px] font-semibold text-emerald-600 flex items-center gap-1.5 mt-0.5">
+          <p className="mt-0.5 flex items-center gap-1.5 text-[10px] font-semibold text-emerald-600">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Online
             &amp; Listening
           </p>
