@@ -74,6 +74,56 @@ export interface CallInitiationResponse {
   provider_status: string | null;
 }
 
+export interface MaintenanceTicketUnit {
+  id: string;
+  unit_number: string | null;
+  property_id: string | null;
+  property_name: string | null;
+  property_address: string | null;
+}
+
+export interface MaintenanceTicketTenant {
+  id: string;
+  name: string | null;
+  phone: string | null;
+}
+
+export interface MaintenanceTicketVendor {
+  id: string;
+  name: string | null;
+  phone: string | null;
+  specialty: string | null;
+}
+
+export interface MaintenanceTicketImage {
+  id: string;
+  image_url: string;
+  uploaded_at: string | null;
+  image_proxy_url: string;
+}
+
+export interface MaintenanceTicket {
+  id: string;
+  title: string | null;
+  issue_category: string | null;
+  issue_description: string | null;
+  priority: string | null;
+  status: string | null;
+  ai_severity_score: number | null;
+  ai_summary: string | null;
+  scheduled_at: string | null;
+  resolved_at: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+  unit: MaintenanceTicketUnit | null;
+  tenant: MaintenanceTicketTenant | null;
+  assigned_vendor: MaintenanceTicketVendor | null;
+  image_url: string | null;
+  image_proxy_url: string | null;
+  images: MaintenanceTicketImage[];
+  latest_dispatch_status: string | null;
+}
+
 async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
@@ -118,4 +168,9 @@ export async function initiateCall(tenantId: string): Promise<CallInitiationResp
   return fetchApi<CallInitiationResponse>(`/v1/tenants/${tenantId}/call`, {
     method: 'POST',
   });
+}
+
+export async function getMaintenanceTickets(status?: string): Promise<MaintenanceTicket[]> {
+  const query = status ? `?status=${encodeURIComponent(status)}` : '';
+  return fetchApi<MaintenanceTicket[]>(`/v1/maintenance/tickets${query}`);
 }
