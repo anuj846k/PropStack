@@ -28,59 +28,38 @@ function storedToUiMessage(m: StoredMessage): UIMessage {
   };
 }
 
+function generateConversationId(): string {
+  if (
+    typeof globalThis.crypto !== 'undefined' &&
+    typeof globalThis.crypto.randomUUID === 'function'
+  ) {
+    return globalThis.crypto.randomUUID();
+  }
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
 export function ChatSection() {
   const endRef = useRef<HTMLDivElement>(null);
+  const previousStatusRef = useRef<'submitted' | 'streaming' | 'ready' | 'error'>(
+    'ready',
+  );
 
-  // null = new blank chat (no conversation created yet)
-  const [activeConversationId, setActiveConversationId] = useState<
-    string | null
-  >(null);
+  const [activeConversationId, setActiveConversationId] = useState<string>(
+    generateConversationId(),
+  );
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
   const [sidebarRefreshKey, setSidebarRefreshKey] = useState(0);
-
-  // Create conversation when starting new chat
-  const createNewConversation = useCallback(async () => {
-    try {
-      const res = await fetch('/api/conversations', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: 'New Chat' }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        return data.id;
-      }
-    } catch (err) {
-      console.error('Failed to create conversation:', err);
-    }
-    return null;
-  }, []);
 
   const { messages, sendMessage, status, setMessages } = useChat({
     transport: new TextStreamChatTransport({
       api: '/api/chat',
       body: {
         userId: 'propstack-owner',
-        // Only send session_id if it's a valid UUID
-        ...(activeConversationId ? { session_id: activeConversationId } : {}),
-      },
-      fetch: async (url, init) => {
-        const res = await fetch(url, init);
-
-        // Capture conversation/session ID from headers
-        const convId = res.headers.get('x-conversation-id');
-        const sessionId = res.headers.get('x-session-id');
-        const newId = convId || sessionId;
-
-        if (res.ok && newId && !activeConversationId) {
-          setActiveConversationId(newId);
-        }
-
-        return res;
+        session_id: activeConversationId,
       },
     }),
-    id: activeConversationId ?? 'new',
+    id: activeConversationId,
   });
 
   // Mark as initialized after first render
@@ -93,6 +72,19 @@ export function ChatSection() {
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, status]);
+
+  useEffect(() => {
+    const previous = previousStatusRef.current;
+    if (
+      previous !== 'ready' &&
+      status === 'ready' &&
+      messages.length > 0 &&
+      !loadingHistory
+    ) {
+      setSidebarRefreshKey((k) => k + 1);
+    }
+    previousStatusRef.current = status;
+  }, [loadingHistory, messages.length, status]);
 
   // ── Load history when user clicks a past conversation ──────────────────────
   const handleSelectConversation = useCallback(
@@ -120,17 +112,10 @@ export function ChatSection() {
   );
 
   // ── Start a brand-new conversation ─────────────────────────────────────────
-  const handleNewChat = useCallback(async () => {
-    setActiveConversationId(null);
+  const handleNewChat = useCallback(() => {
+    setActiveConversationId(generateConversationId());
     setMessages([]);
-
-    // Create a new conversation via API
-    const newId = await createNewConversation();
-    if (newId) {
-      setActiveConversationId(newId);
-      setSidebarRefreshKey((k) => k + 1);
-    }
-  }, [setMessages, createNewConversation]);
+  }, [setMessages]);
 
   // ── Submit a message ───────────────────────────────────────────────────────
   const handleSubmit = useCallback(
@@ -147,7 +132,6 @@ export function ChatSection() {
     [sendMessage],
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const noop = useCallback(() => {}, []);
   const isGenerating = status === 'submitted' || status === 'streaming';
 

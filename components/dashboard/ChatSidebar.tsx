@@ -24,6 +24,12 @@ function formatTime(dateStr: string | null): string {
   return format(d, "MMM d");
 }
 
+function displayTitle(rawTitle: string | null): string {
+  const base = rawTitle ?? "New conversation";
+  const contextIndex = base.indexOf(" [Context:");
+  return contextIndex === -1 ? base : base.slice(0, contextIndex).trim();
+}
+
 interface ChatSidebarProps {
   activeConversationId: string | null;
   onSelect: (id: string) => void;
@@ -70,9 +76,7 @@ export function ChatSidebar({
   }, [refreshKey, fetchConversations]);
 
   const filtered = conversations.filter((c) =>
-    (c.title ?? "New conversation")
-      .toLowerCase()
-      .includes(search.toLowerCase()),
+    displayTitle(c.title).toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
@@ -135,7 +139,7 @@ export function ChatSidebar({
               >
                 <div className="mb-0.5 flex items-start justify-between gap-1">
                   <span className="flex-1 truncate text-[13px] leading-tight font-semibold text-[#25374f]">
-                    {conv.title ?? "New conversation"}
+                    {displayTitle(conv.title)}
                   </span>
                   <span className="mt-0.5 shrink-0 text-[9px] font-medium text-[#8ca1ba]">
                     {formatTime(conv.last_message_at ?? conv.created_at)}

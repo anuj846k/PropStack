@@ -1,7 +1,6 @@
 "use client";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { mockCalls, mockTickets } from "@/lib/data/dashboard";
 import {
   getMaintenanceTickets,
   getProperties,
@@ -29,6 +28,18 @@ import {
 } from "lucide-react";
 import type { CSSProperties, ElementType } from "react";
 import { useEffect, useMemo, useState } from "react";
+
+type RecentRentCall = {
+  id: string;
+  tenant: string;
+  unit: string;
+  property: string;
+  type: string;
+  status: string;
+  time: string;
+  valueLabel: string;
+  valueTone: "warning" | "negative" | "neutral";
+};
 
 const ticketIconMap: Record<string, ElementType> = {
   wrench: Wrench,
@@ -189,10 +200,7 @@ export function DashboardSection({ setScreen }: { setScreen: (id: string) => voi
   const totalOccupiedUnits = properties
     ? properties.reduce((sum, p) => sum + (p.occupied_units ?? 0), 0)
     : 0;
-  const openTickets =
-    tickets && tickets.length > 0
-      ? tickets.length
-      : mockTickets.filter((ticket) => ticket.status !== "resolved").length;
+  const openTickets = tickets && tickets.length > 0 ? tickets.length : 0;
 
   const weeklyPulse = useMemo(() => {
     const fallback = [2840, 3175, 3260, 4090, 3320, 3380, 3240];
@@ -216,23 +224,28 @@ export function DashboardSection({ setScreen }: { setScreen: (id: string) => voi
   const maxPulse = Math.max(...weeklyPulse.map((point) => point.value), 1);
 
   const pieSegments = useMemo(() => {
-    const segments = [
+    const rawSegments = [
       {
         label: "Vacancy",
-        value: Math.max(vacancyCost, 4000),
+        value: vacancyCost,
         color: "#3982e9",
       },
       {
         label: "Open Tickets",
-        value: Math.max(openTickets * 4500, 3000),
+        value: openTickets * 4500,
         color: "#afd0f7",
       },
-      {
-        label: "Buffer",
-        value: 6500,
-        color: "#d5e7fd",
-      },
     ];
+
+    const segments = rawSegments.filter((segment) => segment.value > 0);
+
+    if (segments.length === 0) {
+      return {
+        legend: [] as typeof rawSegments,
+        total: 0,
+        gradient: "",
+      };
+    }
 
     const total = segments.reduce((sum, item) => sum + item.value, 0);
     let running = 0;
@@ -256,25 +269,7 @@ export function DashboardSection({ setScreen }: { setScreen: (id: string) => voi
     background: `conic-gradient(${pieSegments.gradient})`,
   };
 
-  const recentRentCalls = mockCalls
-    .filter((activity) => activity.type === "rent_collection")
-    .slice(0, 3)
-    .map((activity) => ({
-      id: activity.id,
-      tenant: activity.tenant,
-      unit: activity.unit,
-      property: activity.property,
-      type: activity.type,
-      status: activity.status,
-      time: activity.time,
-      valueLabel: activity.promiseAmount ?? activity.duration,
-      valueTone:
-        activity.status === "in_progress"
-          ? "warning"
-          : activity.outcome === "no_answer"
-            ? "negative"
-            : "neutral",
-    }));
+  const recentRentCalls: RecentRentCall[] = [];
 
   return (
     <ScrollArea className="h-full">
@@ -410,24 +405,28 @@ export function DashboardSection({ setScreen }: { setScreen: (id: string) => voi
               </button>
             </div>
 
-            <div className="flex flex-col items-center gap-5 md:flex-row md:items-start md:justify-between xl:flex-col xl:items-center">
-              <div className="relative h-44 w-44 rounded-full" style={pieStyle}>
-                <div className="absolute inset-[22%] rounded-full bg-white" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <p className="text-2xl font-semibold text-[#1f2837]">{formatCurrency(pieSegments.total)}</p>
+            {pieSegments.total === 0 ? (
+              <p className="text-sm text-[#7b8ca2]">No cost data available yet.</p>
+            ) : (
+              <div className="flex flex-col items-center gap-5 md:flex-row md:items-start md:justify-between xl:flex-col xl:items-center">
+                <div className="relative h-44 w-44 rounded-full" style={pieStyle}>
+                  <div className="absolute inset-[22%] rounded-full bg-white" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <p className="text-2xl font-semibold text-[#1f2837]">{formatCurrency(pieSegments.total)}</p>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {pieSegments.legend.map((segment) => (
+                    <div key={segment.label} className="flex items-center gap-2">
+                      <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: segment.color }} />
+                      <span className="min-w-[78px] text-xs text-[#647991]">{segment.label}</span>
+                      <span className="text-xs font-semibold text-[#4e682f]">{formatCurrency(segment.value)}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
-
-              <div className="space-y-3">
-                {pieSegments.legend.map((segment) => (
-                  <div key={segment.label} className="flex items-center gap-2">
-                    <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: segment.color }} />
-                    <span className="min-w-[78px] text-xs text-[#647991]">{segment.label}</span>
-                    <span className="text-xs font-semibold text-[#4e682f]">{formatCurrency(segment.value)}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+            )}
           </article>
         </section>
 
@@ -444,33 +443,37 @@ export function DashboardSection({ setScreen }: { setScreen: (id: string) => voi
             </div>
 
             <div className="space-y-3">
-              {recentRentCalls.map((activity) => {
-                const valueClass =
-                  activity.valueTone === "warning"
-                    ? "text-amber-700"
-                    : activity.valueTone === "negative"
-                      ? "text-red-700"
-                      : "text-[#2f5b88]";
+              {recentRentCalls.length === 0 ? (
+                <p className="text-sm text-[#7b8ca2]">No recent rent collection activity yet.</p>
+              ) : (
+                recentRentCalls.map((activity) => {
+                  const valueClass =
+                    activity.valueTone === "warning"
+                      ? "text-amber-700"
+                      : activity.valueTone === "negative"
+                        ? "text-red-700"
+                        : "text-[#2f5b88]";
 
-                return (
-                  <div
-                    key={activity.id}
-                    className="flex items-center justify-between rounded-2xl border border-[#e5eef9] bg-[#f8fbff] px-4 py-3"
-                  >
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-medium text-[#1f2837]">
-                        {activity.tenant} • {activity.property}
-                      </p>
-                      <p className="mt-1 text-xs text-[#7b8ca2]">
-                        {activity.time} · {activity.type.replace("_", " ")}
-                      </p>
+                  return (
+                    <div
+                      key={activity.id}
+                      className="flex items-center justify-between rounded-2xl border border-[#e5eef9] bg-[#f8fbff] px-4 py-3"
+                    >
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-medium text-[#1f2837]">
+                          {activity.tenant} • {activity.property}
+                        </p>
+                        <p className="mt-1 text-xs text-[#7b8ca2]">
+                          {activity.time} · {activity.type.replace("_", " ")}
+                        </p>
+                      </div>
+                      <span className={`ml-4 shrink-0 text-sm font-semibold ${valueClass}`}>
+                        {activity.valueLabel}
+                      </span>
                     </div>
-                    <span className={`ml-4 shrink-0 text-sm font-semibold ${valueClass}`}>
-                      {activity.valueLabel}
-                    </span>
-                  </div>
-                );
-              })}
+                  );
+                })
+              )}
             </div>
           </article>
 
@@ -486,83 +489,76 @@ export function DashboardSection({ setScreen }: { setScreen: (id: string) => voi
             </div>
 
             <div className="space-y-3">
-              {(tickets && tickets.length > 0 ? tickets.slice(0, 3) : mockTickets).map((ticket) => {
-                const isApiTicket = !("issue" in ticket);
-                const apiTicket = ticket as MaintenanceTicket;
-                const severity =
-                  isApiTicket && apiTicket.priority
-                    ? apiTicket.priority === "high"
+              {!tickets || tickets.length === 0 ? (
+                <p className="text-sm text-[#7b8ca2]">No maintenance requests yet.</p>
+              ) : (
+                tickets.slice(0, 3).map((ticket) => {
+                  const severity =
+                    ticket.priority === "high"
                       ? "high"
-                      : apiTicket.priority === "medium"
+                      : ticket.priority === "medium"
                         ? "medium"
-                        : "low"
-                    : (ticket as typeof mockTickets[number]).severity ?? "medium";
-                const severityBorder =
-                  severity === "high"
-                    ? "border-red-100 bg-red-50"
-                    : severity === "medium"
-                      ? "border-amber-100 bg-amber-50"
-                      : "border-emerald-100 bg-emerald-50";
-                const unitLabel = isApiTicket
-                  ? apiTicket.unit?.unit_number ?? "—"
-                  : (ticket as typeof mockTickets[number]).unit;
-                const tenantLabel = isApiTicket
-                  ? apiTicket.tenant?.name ?? "Unknown tenant"
-                  : (ticket as typeof mockTickets[number]).tenant;
-                const status = isApiTicket ? apiTicket.status ?? "open" : (ticket as typeof mockTickets[number]).status;
-                const issueTitle = isApiTicket
-                  ? apiTicket.title ?? apiTicket.ai_summary ?? "Maintenance issue"
-                  : (ticket as typeof mockTickets[number]).issue;
-                const iconType = isApiTicket
-                  ? apiTicket.issue_category === "plumbing" ||
-                      apiTicket.issue_category === "carpentry" ||
-                      apiTicket.issue_category === "other"
-                    ? "wrench"
-                    : apiTicket.issue_category === "electrical"
-                      ? "lightbulb"
-                      : apiTicket.issue_category === "cleaning"
-                        ? "snowflake"
-                        : "lock"
-                  : (ticket as typeof mockTickets[number]).iconType;
+                        : "low";
+                  const severityBorder =
+                    severity === "high"
+                      ? "border-red-100 bg-red-50"
+                      : severity === "medium"
+                        ? "border-amber-100 bg-amber-50"
+                        : "border-emerald-100 bg-emerald-50";
+                  const unitLabel = ticket.unit?.unit_number ?? "—";
+                  const tenantLabel = ticket.tenant?.name ?? "Unknown tenant";
+                  const status = ticket.status ?? "open";
+                  const issueTitle = ticket.title ?? ticket.ai_summary ?? "Maintenance issue";
+                  const iconType =
+                    ticket.issue_category === "plumbing" ||
+                    ticket.issue_category === "carpentry" ||
+                    ticket.issue_category === "other"
+                      ? "wrench"
+                      : ticket.issue_category === "electrical"
+                        ? "lightbulb"
+                        : ticket.issue_category === "cleaning"
+                          ? "snowflake"
+                          : "lock";
 
-                return (
-                  <div
-                    key={ticket.id}
-                    className="grid grid-cols-1 gap-2 rounded-2xl border border-[#e5eef9] bg-[#f8fbff] px-4 py-3 md:grid-cols-[1.8fr_1fr_1fr] md:items-center"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className={`flex h-8 w-8 items-center justify-center rounded-full border ${severityBorder}`}>
-                        <TicketIcon iconType={iconType} severity={severity} />
+                  return (
+                    <div
+                      key={ticket.id}
+                      className="grid grid-cols-1 gap-2 rounded-2xl border border-[#e5eef9] bg-[#f8fbff] px-4 py-3 md:grid-cols-[1.8fr_1fr_1fr] md:items-center"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`flex h-8 w-8 items-center justify-center rounded-full border ${severityBorder}`}>
+                          <TicketIcon iconType={iconType} severity={severity} />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-[#1f2837]">{issueTitle}</p>
+                          <p className="text-[11px] text-[#8294ad]">
+                            Unit {unitLabel} · {ticket.id}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-sm font-medium text-[#1f2837]">{issueTitle}</p>
-                        <p className="text-[11px] text-[#8294ad]">
-                          Unit {unitLabel} · {ticket.id}
-                        </p>
+
+                      <p className="text-xs font-medium text-[#4f6785] md:text-sm">{tenantLabel}</p>
+
+                      <div className="flex items-center justify-between md:justify-end md:gap-3">
+                        <span className="text-xs font-medium uppercase tracking-wide text-[#6b7f97]">
+                          {getStatusLabel(status)}
+                        </span>
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
+                            severity === "high"
+                              ? "bg-red-100 text-red-700"
+                              : severity === "medium"
+                                ? "bg-amber-100 text-amber-700"
+                                : "bg-emerald-100 text-emerald-700"
+                          }`}
+                        >
+                          {severity}
+                        </span>
                       </div>
                     </div>
-
-                    <p className="text-xs font-medium text-[#4f6785] md:text-sm">{tenantLabel}</p>
-
-                    <div className="flex items-center justify-between md:justify-end md:gap-3">
-                      <span className="text-xs font-medium uppercase tracking-wide text-[#6b7f97]">
-                        {getStatusLabel(status)}
-                      </span>
-                      <span
-                        className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
-                          severity === "high"
-                            ? "bg-red-100 text-red-700"
-                            : severity === "medium"
-                              ? "bg-amber-100 text-amber-700"
-                              : "bg-emerald-100 text-emerald-700"
-                        }`}
-                      >
-                        {severity}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })
+              )}
             </div>
           </article>
         </section>

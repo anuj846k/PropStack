@@ -67,11 +67,55 @@ export interface PaginatedCallHistory {
   total_pages: number;
 }
 
+/** Rent call list item (landlord-scoped). */
+export interface RentCallListItem {
+  id: string;
+  tenant_name: string;
+  unit_number: string;
+  property_name: string;
+  outcome: string | null;
+  created_at: string | null;
+  duration_seconds: number | null;
+  language_used: string | null;
+}
+
+export interface RentCallListResponse {
+  calls: RentCallListItem[];
+}
+
+/** Full call detail for the dashboard. Stored AI analysis when present. */
+export interface RentCallDetail {
+  id: string;
+  tenant_id: string;
+  tenant_name: string;
+  unit_number: string;
+  property_name: string;
+  outcome: string | null;
+  summary: string | null;
+  transcript: string | null;
+  created_at: string | null;
+  duration_seconds: number | null;
+  language_used: string | null;
+  ai_summary: string | null;
+  promise_amount: string | null;
+  promise_date: string | null;
+  sentiment: string | null;
+}
+
+/** Sara's analysis (AI-generated from transcript / event_data). */
+export interface CallAnalysis {
+  summary: string;
+  promise_amount: string | null;
+  promise_date: string | null;
+  sentiment: string;
+}
+
 export interface CallInitiationResponse {
   call_id: string | null;
   status: string;
   message: string;
   provider_status: string | null;
+  error_message?: string | null;
 }
 
 export interface MaintenanceTicketUnit {
@@ -169,12 +213,20 @@ async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> 
       ...options?.headers,
     },
   });
-  
+
   if (!res.ok) {
-    const error = await res.text();
-    throw new Error(error || `Failed to fetch ${endpoint}`);
+    const text = await res.text();
+    let message = text || `Failed to fetch ${endpoint}`;
+    try {
+      const data = JSON.parse(text) as { error_message?: string; error?: string };
+      if (data.error_message) message = data.error_message;
+      else if (data.error) message = data.error;
+    } catch {
+      // use text as message
+    }
+    throw new Error(message);
   }
-  
+
   return res.json();
 }
 
@@ -198,6 +250,27 @@ export async function getTenantDetail(tenantId: string): Promise<TenantDetail> {
 
 export async function getTenantCalls(tenantId: string, page = 1, pageSize = 10): Promise<PaginatedCallHistory> {
   return fetchApi<PaginatedCallHistory>(`/v1/tenants/${tenantId}/calls?page=${page}&page_size=${pageSize}`);
+}
+
+/** List all rent calls for the authenticated landlord. */
+export async function getRentCalls(): Promise<RentCallListResponse> {
+  return fetchApi<RentCallListResponse>('/v1/calls');
+}
+
+/** Get one rent call's full detail. */
+export async function getCallDetail(callId: string): Promise<RentCallDetail> {
+  return fetchApi<RentCallDetail>(`/v1/calls/${callId}`);
+}
+
+/** Get Sara's analysis for a call (optional event_data for ADK event context). */
+export async function getCallAnalysis(
+  callId: string,
+  eventData?: Record<string, unknown> | null
+): Promise<CallAnalysis> {
+  return fetchApi<CallAnalysis>(`/v1/calls/${callId}/analysis`, {
+    method: 'POST',
+    body: JSON.stringify({ event_data: eventData ?? undefined }),
+  });
 }
 
 export async function initiateCall(tenantId: string): Promise<CallInitiationResponse> {

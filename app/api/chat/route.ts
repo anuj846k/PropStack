@@ -45,16 +45,22 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const { messages, id: sessionId } = body;
+  const { messages, id: transportSessionId, session_id: explicitSessionId } = body;
   const text = extractLastUserText(messages ?? []);
 
   if (!text) return new Response('Missing message', { status: 400 });
 
-  // ── Resolve conversation ID ─────────────────────────────────
-  // If the frontend passed "new" or undefined, we just pass undefined to Python ADK.
-  // ADK will auto-generate a true UUID and return it via headers.
-  let conversationId: string | undefined =
-    sessionId === 'new' ? undefined : sessionId;
+  const requestedSessionId =
+    typeof explicitSessionId === 'string' && explicitSessionId.trim().length > 0
+      ? explicitSessionId.trim()
+      : typeof transportSessionId === 'string'
+        ? transportSessionId.trim()
+        : '';
+
+  const conversationId: string | undefined =
+    !requestedSessionId || requestedSessionId === 'new'
+      ? undefined
+      : requestedSessionId;
 
   // ── Call Python ADK backend ─────────────────────────────────
   const response = await fetch(`${AI_SERVICE_URL}/api/v1/chat`, {

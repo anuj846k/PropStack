@@ -1,35 +1,35 @@
-'use client';
+"use client";
 
 import {
   Conversation,
   ConversationContent,
   ConversationScrollButton,
-} from '@/components/ai-elements/conversation';
+} from "@/components/ai-elements/conversation";
 import {
   Message,
   MessageContent,
   MessageResponse,
-} from '@/components/ai-elements/message';
-import { Avatar } from '@/components/ui/avatar';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Building2, Hammer } from 'lucide-react';
-import { memo } from 'react';
+} from "@/components/ai-elements/message";
+import { Avatar } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Building2 } from "lucide-react";
+import { memo } from "react";
 
 export type ChatMessageType = {
   id: string;
-  role: 'user' | 'assistant' | 'system';
+  role: "user" | "assistant" | "system";
   parts?: Array<{ type: string; text?: string }>;
 };
 
 function getMessageText(message: ChatMessageType): string {
-  if (!message.parts?.length) return '';
+  if (!message.parts?.length) return "";
   return message.parts
     .filter(
       (p): p is { type: string; text: string } =>
-        p.type === 'text' && typeof p.text === 'string',
+        p.type === "text" && typeof p.text === "string",
     )
     .map((p) => p.text)
-    .join('');
+    .join("");
 }
 
 const ChatMessage = memo(function ChatMessage({
@@ -38,29 +38,29 @@ const ChatMessage = memo(function ChatMessage({
   message: ChatMessageType;
 }) {
   const text = getMessageText(message);
-  const isUser = message.role === 'user';
+  const isUser = message.role === "user";
   return (
     <div
-      className={`flex items-start gap-3 ${isUser ? 'flex-row-reverse' : ''}`}
+      className={`flex items-start gap-3 ${isUser ? "flex-row-reverse" : ""}`}
     >
       <Avatar
         className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl shadow-sm ${
           isUser
-            ? 'rounded-full border border-[#cfe0f4] bg-white text-[#2f5b88] font-bold text-xs'
-            : 'bg-[#2f5b88] text-white'
+            ? "rounded-full border border-[#cfe0f4] bg-white text-[#2f5b88] font-bold text-xs"
+            : "bg-[#2f5b88] text-white"
         }`}
       >
-        {isUser ? 'U' : <Building2 size={14} />}
+        {isUser ? "U" : <Building2 size={14} />}
       </Avatar>
       <Message
-        from={message.role as 'user' | 'assistant'}
-        className={isUser ? 'max-w-[72%]' : 'max-w-[80%]'}
+        from={message.role as "user" | "assistant"}
+        className={isUser ? "max-w-[72%]" : "max-w-[80%]"}
       >
         <MessageContent
           className={
             isUser
-              ? 'rounded-2xl rounded-tr-sm border border-[#d3e3f6] !bg-white px-4 py-3 text-[#1f2d40] shadow-sm [&_code]:rounded [&_code]:bg-slate-100 [&_code]:px-1.5 [&_code]:py-0.5'
-              : 'rounded-2xl rounded-tl-sm border border-[#d8e6f8] !bg-white/92 px-4 py-3 text-[#24364d] shadow-sm [&_code]:rounded [&_code]:bg-slate-100 [&_code]:px-1.5 [&_code]:py-0.5'
+              ? "rounded-2xl rounded-tr-sm border border-[#d3e3f6] !bg-white px-4 py-3 text-[#1f2d40] shadow-sm [&_code]:rounded [&_code]:bg-slate-100 [&_code]:px-1.5 [&_code]:py-0.5"
+              : "rounded-2xl rounded-tl-sm border border-[#d8e6f8] !bg-white/92 px-4 py-3 text-[#24364d] shadow-sm [&_code]:rounded [&_code]:bg-slate-100 [&_code]:px-1.5 [&_code]:py-0.5"
           }
         >
           <MessageResponse className="text-[15px] leading-relaxed tracking-[0.01em] [&_li]:my-0.5 [&_ul]:my-2">
@@ -129,22 +129,14 @@ export function ChatConversation({
               </div>
             )}
             {isGenerating && (
-              <div className="flex flex-col gap-2">
-                <div className="flex gap-3">
-                  <Avatar className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#2f5b88] text-white">
-                    <Building2 size={14} />
-                  </Avatar>
-                  <div className="flex items-center gap-2 rounded-2xl rounded-tl-sm border border-[#d8e6f8] bg-white/90 px-4 py-3 shadow-sm backdrop-blur">
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#3d6fb4]" />
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#3d6fb4] [animation-delay:75ms]" />
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-[#3d6fb4] [animation-delay:150ms]" />
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 pl-12 text-[11px] font-medium text-[#4b6380]">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[#e5effb] px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-[#36527a]">
-                    <Hammer className="h-3 w-3" />
-                    <span>Calling tools…</span>
-                  </span>
+              <div className="flex gap-3">
+                <Avatar className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#2f5b88] text-white">
+                  <Building2 size={14} />
+                </Avatar>
+                <div className="flex items-center gap-2 rounded-2xl rounded-tl-sm border border-[#d8e6f8] bg-white/90 px-4 py-3 shadow-sm backdrop-blur">
+                  <span className="h-2 w-2 animate-bounce rounded-full bg-[#3d6fb4]" />
+                  <span className="h-2 w-2 animate-bounce rounded-full bg-[#3d6fb4] [animation-delay:75ms]" />
+                  <span className="h-2 w-2 animate-bounce rounded-full bg-[#3d6fb4] [animation-delay:150ms]" />
                 </div>
               </div>
             )}

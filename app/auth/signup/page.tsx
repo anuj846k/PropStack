@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 const GoogleIcon = () => (
@@ -38,12 +39,12 @@ const GoogleIcon = () => (
 
 export default function SignUpPage() {
   const supabase = createClient();
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
 
   const handleGoogleSignIn = async () => {
     await supabase.auth.signInWithOAuth({
@@ -84,60 +85,9 @@ export default function SignUpPage() {
       return;
     }
 
-    setSuccess(true);
     setLoading(false);
+    router.push('/dashboard');
   };
-
-  if (success) {
-    return (
-      <div className="flex min-h-svh items-center justify-center bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-100 p-6">
-        <Card className="relative w-full max-w-md border-gray-200/80 shadow-xl shadow-gray-200/50 backdrop-blur-sm">
-          <CardHeader className="items-center space-y-4 pb-2 pt-8">
-            <div className="flex items-center justify-center">
-              <PropLogo size={32} />
-            </div>
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-green-100">
-              <svg
-                className="h-7 w-7 text-green-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="2.5"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
-                />
-              </svg>
-            </div>
-            <div className="space-y-1.5 text-center">
-              <CardTitle className="text-2xl font-bold tracking-tight text-gray-900">
-                Check your email
-              </CardTitle>
-              <CardDescription className="text-sm text-gray-500">
-                We&apos;ve sent a confirmation link to{' '}
-                <span className="font-medium text-gray-700">{email}</span>.
-                Click the link to verify your account.
-              </CardDescription>
-            </div>
-          </CardHeader>
-          <CardContent className="px-8 pb-8 pt-4 text-center">
-            <p className="text-xs text-gray-400 mb-4">
-              Didn&apos;t receive the email? Check your spam folder or try
-              again.
-            </p>
-            <Link
-              href="/auth/login"
-              className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
-            >
-              Back to sign in
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className="flex min-h-svh items-center justify-center bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-100 p-6">

@@ -13,7 +13,11 @@ export const getOutcomeBadge = (o: string) =>
         ? "default"
         : o === "live"
           ? "secondary"
-          : "outline";
+          : o === "initiated"
+            ? "secondary"
+            : o === "failed"
+              ? "destructive"
+              : "outline";
 export const getOutcomeLabel = (o: string) =>
   o === "promise"
     ? "Payment Promised"
@@ -25,7 +29,13 @@ export const getOutcomeLabel = (o: string) =>
           ? "🔴 Live"
           : o === "completed"
             ? "Completed"
-            : "—";
+            : o === "initiated"
+              ? "Initiated"
+              : o === "failed"
+                ? "Failed"
+                : o
+                  ? o.charAt(0).toUpperCase() + o.slice(1).toLowerCase()
+                  : "—";
 export const getSentimentIcon = (s: string) =>
   s === "cooperative"
     ? "😊"

@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { type NextRequest, NextResponse } from 'next/server';
+import { randomUUID } from 'node:crypto';
 
 /** GET /api/conversations — list conversations for the logged-in landlord */
 export async function GET() {
@@ -42,7 +43,7 @@ export async function GET() {
 }
 
 /** POST /api/conversations — create a new conversation, return its id */
-export async function POST(req: NextRequest) {
+export async function POST(_req: NextRequest) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -51,11 +52,10 @@ export async function POST(req: NextRequest) {
   if (error || !user)
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  // Rather than manually inserting into conversations table,
-  // ADK dynamically creates it when the first message is sent.
-  // We can just return 'new' so the frontend resets its state.
+  // ADK creates the backing session on first message.
+  // We still provide a real UUID immediately so UI state remains stable.
   return NextResponse.json({
-    id: 'new',
+    id: randomUUID(),
     title: 'New conversation',
     last_message_at: new Date().toISOString(),
     created_at: new Date().toISOString(),
