@@ -22,7 +22,7 @@ export async function GET(
 
   try {
     const backendUrl =
-      process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8001';
+      process.env.NEXT_PUBLIC_AI_SERVICE_URL || 'http://127.0.0.1:8001';
     const response = await fetch(
       `${backendUrl}/api/v1/chat/sessions/${id}/history`,
       {
