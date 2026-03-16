@@ -1,14 +1,6 @@
 PROPERTY MANAGEMENT SYSTEM AI native
 
 
-Reference website:
-https://www.buildium.com/features/ai-property-management-software/
-
-
-
-
-
-
 
 Full flow 
 Users Stores everyone who logs into the platform. Right now that's tenants and landlords. A tenant needs an account to report maintenance issues. A landlord needs an account to manage everything. One table for both, the role field separates them.
