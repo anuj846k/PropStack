@@ -1,8 +1,7 @@
 "use client";
 
-import { AcmeCorp, CommandR, FocalPoint, Interlock } from "@/components/icons";
 import Image from "next/image";
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 // Constants (match app blue: #3b82f6)
 const RING_ACTIVE = "#3b82f6";
@@ -22,14 +21,6 @@ interface TeamMember {
   review: string;
 }
 
-interface LogoConfig {
-  name: string;
-  component: React.ReactNode;
-  wrapperClass: string;
-  innerClass: string;
-  extraInnerClass?: string;
-}
-
 // Data
 const teamMembers: TeamMember[] = [
   {
@@ -38,7 +29,7 @@ const teamMembers: TeamMember[] = [
     img: "/Assets/JenniferWalsh.png",
     company: "CommandR",
     review:
-      "Centora has transformed how we manage our property portfolio. The AI automation saves us hours every week.",
+      "PropStack has transformed how we manage our property portfolio. The AI automation saves us hours every week.",
   },
   {
     name: "Michael Torres",
@@ -62,43 +53,7 @@ const teamMembers: TeamMember[] = [
     img: "/Assets/DavidPatterson.png",
     company: "AcmeCorp",
     review:
-      "Scaling our portfolio became effortless with Centora. The platform grows with us seamlessly.",
-  },
-];
-
-const logos: LogoConfig[] = [
-  {
-    name: "CommandR",
-    component: <CommandR />,
-    wrapperClass:
-      "inline-flex h-[40px] flex-col items-start aspect-9/2 opacity-30",
-    innerClass: "w-[180px] h-[40px] shrink-0 opacity-100",
-  },
-  {
-    name: "Interlock",
-    component: <Interlock />,
-    wrapperClass:
-      "inline-flex h-[44px] flex-col items-start aspect-[149.41/44] opacity-30",
-    innerClass:
-      "flex w-[149.41px] h-[44px] py-[0.001px] flex-col justify-center items-center shrink-0",
-  },
-  {
-    name: "FocalPoint",
-    component: <FocalPoint />,
-    wrapperClass:
-      "inline-flex h-[40px] flex-col items-start aspect-199/48 opacity-30",
-    innerClass:
-      "flex w-[165.83px] h-[40px] flex-col justify-center items-center shrink-0",
-    extraInnerClass: "w-[165.83px] h-[39.999px] shrink-0 opacity-100",
-  },
-  {
-    name: "AcmeCorp",
-    component: <AcmeCorp />,
-    wrapperClass:
-      "inline-flex h-[40px] flex-col items-start aspect-101/24 opacity-30",
-    innerClass:
-      "flex w-[168.33px] h-[40px] flex-col justify-center items-center shrink-0",
-    extraInnerClass: "w-[168.33px] h-[39.999px] shrink-0 opacity-100",
+      "Scaling our portfolio became effortless with PropStack. The platform grows with us seamlessly.",
   },
 ];
 
@@ -208,41 +163,9 @@ const TestimonialPanel = ({ member, isActive }: TestimonialPanelProps) => {
   );
 };
 
-interface LogoItemProps {
-  logo: LogoConfig;
-  isActive: boolean;
-}
-
-const LogoItem = ({ logo, isActive }: LogoItemProps) => {
-  const { component, wrapperClass, innerClass, extraInnerClass } = logo;
-
-  const activeClass = wrapperClass.replace("opacity-30", "opacity-100");
-
-  return (
-    <div
-      className={`transition-all duration-500 ${
-        isActive ? activeClass : wrapperClass
-      }`}
-    >
-      <div className={innerClass}>
-        {extraInnerClass ? (
-          <div className={extraInnerClass}>{component}</div>
-        ) : (
-          component
-        )}
-      </div>
-    </div>
-  );
-};
-
 // Main component
 const TrustedBy = () => {
   const [activeIndex, setActiveIndex] = useState(1);
-
-  const currentCompany = useMemo(
-    () => teamMembers[activeIndex]?.company,
-    [activeIndex]
-  );
 
   const handleAvatarClick = useCallback((index: number) => {
     setActiveIndex(index);
@@ -293,16 +216,6 @@ const TrustedBy = () => {
                   ))}
                 </div>
               </div>
-            </div>
-
-            <div className="h-10 w-5xl flex justify-between">
-              {logos.map((logo) => (
-                <LogoItem
-                  key={logo.name}
-                  logo={logo}
-                  isActive={currentCompany === logo.name}
-                />
-              ))}
             </div>
           </div>
         </div>

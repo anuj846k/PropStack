@@ -1,4 +1,8 @@
+"use client";
+
 import { ArrowRight, Building2, Mail } from "lucide-react";
+import { toast } from "sonner";
+import { useState } from "react";
 
 type FooterLinkGroup = {
   title: string;
@@ -42,6 +46,41 @@ const linkClass =
   "flex flex-col items-start self-stretch pt-[2.75px] pb-[1.25px] text-white text-[13.7px] font-[400] leading-[20px]";
 
 const Footer = () => {
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email || !email.includes("@")) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success(data.message || "You're on the waitlist!");
+        setEmail("");
+      } else {
+        toast.error(data.error || "Something went wrong");
+      }
+    } catch {
+      toast.error("Failed to join waitlist. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <footer className="relative flex w-full flex-col items-start bg-[#F5F5F5] pt-[152px]  ">
       <div className="flex flex-col items-start self-stretch rounded-tl-[48px] rounded-tr-[48px] bg-[#3b82f6] px-6 md:px-16 lg:px-[213px] pb-[64px] pt-[280px] md:pt-[320px] lg:pt-[384px] rounded-b-none">
@@ -116,20 +155,30 @@ const Footer = () => {
             truly amazing today
           </h1>
 
-          <div className="relative z-10 flex items-center bg-white/90 backdrop-blur-sm rounded-full p-1.5 w-full max-w-md shadow-lg border border-white/50">
+          <form 
+            onSubmit={handleSubmit}
+            className="relative z-10 flex items-center bg-white/90 backdrop-blur-sm rounded-full p-1.5 w-full max-w-md shadow-lg border border-white/50"
+          >
             <div className="pl-4 pr-2 text-gray-500">
               <Mail className="w-5 h-5" />
             </div>
             <input
               type="email"
               placeholder="Enter your email"
-              className="flex-1 bg-transparent outline-none text-gray-900 placeholder:text-gray-500 text-sm md:text-base min-w-0"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={isLoading}
+              className="flex-1 bg-transparent outline-none text-gray-900 placeholder:text-gray-500 text-sm md:text-base min-w-0 disabled:opacity-50"
             />
-            <button className="bg-black text-white px-5 py-2.5 md:px-6 md:py-3 rounded-full text-sm font-medium flex items-center gap-2 hover:bg-gray-800 transition-colors shrink-0">
-              Join Waitlist
-              <ArrowRight className="w-4 h-4" />
+            <button 
+              type="submit"
+              disabled={isLoading}
+              className="bg-black text-white px-5 py-2.5 md:px-6 md:py-3 rounded-full text-sm font-medium flex items-center gap-2 hover:bg-gray-800 transition-colors shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? "Joining..." : "Join Waitlist"}
+              {!isLoading && <ArrowRight className="w-4 h-4" />}
             </button>
-          </div>
+          </form>
         </div>
       </div>
     </footer>

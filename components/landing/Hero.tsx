@@ -57,41 +57,7 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="relative z-20 mx-auto flex w-full max-w-[1440px] flex-col items-center overflow-hidden px-6 pb-12 pt-6 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-        <div className="flex w-max animate-marquee items-center gap-16">
-          {[
-            'acmecorp.svg',
-            'altshift.svg',
-            'biosynthesis.svg',
-            'boltshift.svg',
-            'capsule.svg',
-            'acmecorp.svg',
-            'altshift.svg',
-            'biosynthesis.svg',
-            'boltshift.svg',
-            'capsule.svg',
-            'acmecorp.svg',
-            'altshift.svg',
-            'biosynthesis.svg',
-            'boltshift.svg',
-            'capsule.svg',
-            'acmecorp.svg',
-            'altshift.svg',
-            'biosynthesis.svg',
-            'boltshift.svg',
-            'capsule.svg',
-          ].map((logo, index) => (
-            <Image
-              key={index}
-              src={`/Assets/${logo}`}
-              alt={logo.replace('.svg', '')}
-              width={100}
-              height={100}
-              className="h-8 w-auto opacity-80 brightness-0 invert transition-all duration-300 hover:opacity-100"
-            />
-          ))}
-        </div>
-      </div>
+      {/* Removed fake company logos marquee - was showing placeholder logos */}
     </section>
   );
 }

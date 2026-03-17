@@ -18,8 +18,8 @@ const AVATARS = [
 ] satisfies Avatar[];
 
 const KPI_ROWS = [
-  { Icon: Rocket, label: "2,598 Tickets Resolved", delta: "+24%" },
-  { Icon: Zap, label: "99.9% Rent Collected", delta: "+0.2%" },
+  { Icon: Rocket, label: "Automated Rent Collection", delta: "Save 10hrs/week" },
+  { Icon: Zap, label: "AI-Powered Insights", delta: "Real-time" },
 ] satisfies KpiRow[];
 
 const PROJECT_META = ["PRJ", "2024", "LIVE"] as const;
@@ -210,9 +210,9 @@ const Bento = () => {
               className={`flex min-h-[256px] flex-col items-center justify-center bg-[#eff6ff] p-8 xl:h-full ${ROUND_CARD}`}
             >
               <h3 className="text-center text-[24px] font-[510] text-[#171717]">
-                Trusted By
+                Trusted by
                 <br />
-                254k+ Users
+                Property Managers
               </h3>
 
               <div className="mt-5 flex items-center pr-4">
@@ -238,7 +238,7 @@ const Bento = () => {
 
               <div className="mt-5 inline-flex items-center gap-2 text-xs font-medium leading-4 text-[#525252]">
                 <Star />
-                <span>4.9 from 48k+ reviews</span>
+                <span>Rated 4.9/5 by early users</span>
               </div>
             </div>
 
